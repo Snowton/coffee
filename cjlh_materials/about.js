@@ -1,15 +1,17 @@
 const us = [
-    "Shreya Mogulothu is a junior at WW-P High School North. She has always been interested in math and problem-solving.  and has enjoyed participating in competition math since second grade, when she first started participating in North South contests, qualifying for nationals every year. She loves participating in math competitions like Princeton University Math Competition (PUMaC), Harvard-MIT Math Tournament (HMMT), and MMATHS (Columbia) as part of her school math team. In eighth grade, she placed fourth in the Joe Holbrook Memorial Math Tournament (JHMMT), placed fourth in the WWP Math Tournament (WWPMT), was a top scorer in AMC 8 at her school, placed fifth with her team at Exeter, and was part of her school MathCounts team which placed 1st at the regionals and went on to win 2nd place in states. She participated in the AMC 10, and qualified for the AIME twice. On Sundays, she has quite a fun time teaching students prealgebra and algebra."
-    + "<br>"
+    "<p><strong>Shreya Mogulothu</strong> is a junior at WW-P High School North. She has always been interested in math and problem-solving.  and has enjoyed participating in competition math since second grade, when she first started participating in North South contests, qualifying for nationals every year. She loves participating in math competitions like Princeton University Math Competition (PUMaC), Harvard-MIT Math Tournament (HMMT), and MMATHS (Columbia) as part of her school math team. In eighth grade, she placed fourth in the Joe Holbrook Memorial Math Tournament (JHMMT), placed fourth in the WWP Math Tournament (WWPMT), was a top scorer in AMC 8 at her school, placed fifth with her team at Exeter, and was part of her school MathCounts team which placed 1st at the regionals and went on to win 2nd place in states. She participated in the AMC 10, and qualified for the AIME twice. On Sundays, she has quite a fun time teaching students prealgebra and algebra."
+    + "</p><p>"
     + "Shreya also loves computer science. As a freshman she took an introductory course in programming and as a sophomore took AP Computer Science A. She and her team placed first in New Jersey in the CTF hosted by GGCS and tied for seventh in the nation. She is also a member of the school computer science club, and contributes as a problem-writer who creates challenges for HSCTF which they host. She is currently silver-tier at USACO and hopes to break gold this year. She likes to share her interests in programming during Sunday afternoons as well."
-    + "<br>"
-    + "Besides math and computer science, Shreya loves belting her favorite songs, drawing when she's moody, and hanging out with the awesome people that are her friends.",
-    "Amy Wang is a junior at WW-P High School North. She has been interested in math, and particularly critical thinking, since fifth grade. In sixth grade, Amy was accepted into the Accelerated and Enriched math program at her middle school, She has challenged herself in problem solving by participating in math competitions like Harvard-MIT Math Tournament (HMMT), and MMATHS (Columbia) as part of her school math team. She participated in the AMC 10, and has qualified for the AIME."
-    + "<br>"
+    + "</p><p>"
+    + "Besides math and computer science, Shreya loves belting her favorite songs, drawing when she's moody, and hanging out with the awesome people that are her friends."
+    + "</p>",
+    "<p><strong>Amy Wang</strong> is a junior at WW-P High School North. She has been interested in math, and particularly critical thinking, since fifth grade. In sixth grade, Amy was accepted into the Accelerated and Enriched math program at her middle school, She has challenged herself in problem solving by participating in math competitions like Harvard-MIT Math Tournament (HMMT), and MMATHS (Columbia) as part of her school math team. She participated in the AMC 10, and has qualified for the AIME."
+    + "</p><p>"
     + "Amy is also fascinated by technology, and in particular, programming. In high school, she took two online CTY Java courses: Introduction to Java and Advanced Java Programming. In her sophomore year, she took AP Computer Science A, and achieved a 5 on the AP exam. In the 2020 National Team Championship for Girls Go CyberStart, her team placed first in New Jersey, and tied for seventh nationally. Amy is also currently silver-tiered at USACO, and hopes to advance to gold this year. She enjoys tutoring students in her free time, volunteering through non-profit organizations such as Learn To Be and Learn in Shelter. Some of her hobbies include reading and playing violin; her passion for music inspired her to play violin for senior citizens at nursing homes, doing so since eighth grade. She has tutored students in programming before, in addition to other subjects such as math and language arts."
-    + "<br>"
-    + "Aside from volunteering, Amy loves to read exciting books in her free time, and enjoys (occasionally) annoying her friends.",
-    "Priya Alapati: Bio coming soon!"
+    + "</p><p>"
+    + "Aside from volunteering, Amy loves to read exciting books in her free time, and enjoys (occasionally) annoying her friends."
+    + "</p>",
+    "<p><strong>Priya Alapati</strong>: Bio coming soon!</p>"
 ]
 
 module.exports = us;

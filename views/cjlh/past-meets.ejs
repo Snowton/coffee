@@ -1,0 +1,14 @@
+<%- include("../partials/cjlh/header.ejs") %> 
+
+<h2>Past Meets</h2>
+
+<div>
+    <% for(element of pastMeets) { %> 
+        <h3><%= element.name %> - <%= element.date %></h5>
+    <ul>
+        <% for(key in element.data) { %>
+            <li><%= key[0].toUpperCase() + key.slice(1) %>: <a href="<%= element.data[key] %>"><%= element.data[key] %></a></li>
+        <% } %> 
+    </ul>
+    <% } %> 
+</div>

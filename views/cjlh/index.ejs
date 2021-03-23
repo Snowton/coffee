@@ -2,73 +2,68 @@
 
 <h2>Program Overview</h2>
 <hr>
-<h3>Philosophy Reading Group</h3>
+<section>
+    <h3>Philosophy Reading Group</h3>
 
-<p>The art of proposing a question must be held of higher value than answering it.</p>
-<p>Registration: <a href="https://forms.gle/dynHaxHR4sipr1im6">https://forms.gle/dynHaxHR4sipr1im6</a></p>
-
-<p>
-    Description: What is your take on hard questions? We want to know! Join the ride as we grapple with ideas with the help from thinkers just like us across the ages. We’re starting with Edward Craig’s Philosophy: A Very Short Introduction, and plan to move on to Schopenhauer’s The World as Will and Representation after that. Our book list is open to change based on recommendations and member feedback, so if you have any suggestions feel free to reach out to us about this! We will meet every Saturday from 4PM-5PM EST, except on nationally observed holidays. Since this is a discussion-based group, we highly value participation and can be flexible with this schedule as per member availability.
-</p>
-
-<p>
-    More information: Our complete book list, along with summaries of past discussions and other information, will be available here: <a href="https://tinyurl.com/cjphilosophy">https://tinyurl.com/cjphilosophy</a>. The discord server is <a href="https://discord.gg/New27N83Pe">https://discord.gg/New27N83Pe</a>.
-</p>
-
-<p>
-    Fees: None.
-</p>
+    <p class="quote">The art of proposing a question must be held of higher value than answering it.</p>
+    <p>Registration: <a href="https://forms.gle/dynHaxHR4sipr1im6">https://forms.gle/dynHaxHR4sipr1im6</a></p>
+    
+    <p>
+        Description: What is your take on hard questions? We want to know! Join the ride as we grapple with ideas with the help from thinkers just like us across the ages. We’re starting with Edward Craig’s Philosophy: A Very Short Introduction, and plan to move on to Schopenhauer’s The World as Will and Representation after that. Our book list is open to change based on recommendations and member feedback, so if you have any suggestions feel free to reach out to us about this! We will meet every Saturday from 4PM-5PM EST, except on nationally observed holidays. Since this is a discussion-based group, we highly value participation and can be flexible with this schedule as per member availability.
+    </p>
+    
+    <p>
+        More information: Our complete book list, along with summaries of past discussions and other information, will be available here: <a href="https://tinyurl.com/cjphilosophy">https://tinyurl.com/cjphilosophy</a>. The discord server is <a href="https://discord.gg/New27N83Pe">https://discord.gg/New27N83Pe</a>.
+    </p>
+    
+    <p>
+        Fees: None.
+    </p>
+</section>
 
 <hr>
 
-<h3>Seasonal Math Meets</h3>
+<section>
+    <h3>Seasonal Math Meets</h3>
 
-<p>
-    Life is a math equation. In order to gain the most, you have to know how to convert negatives into positives.
-</p>
-
-<p>
-    Registration (April Fool’s Day): <a href="https://tinyurl.com/regaprilmeet">https://tinyurl.com/regaprilmeet</a>.
-</p>
-
-<p>
-    Description: As Paul Halmos once said, “the only way to learn mathematics is to do mathematics.” At CJLH math meets, our purpose is to provide students with several opportunities to cultivate their learning in mathematics, to enhance their problem solving skills, and ask lots of questions. Our seasonal math meets are held on select holidays, and feature a variety of problems--from algebra and geometry to combinatorics and number theory. Participants have the opportunity to tackle these engaging  problems by competing individually or collaborating with others on teams of two to four people. Following the competition, we give detailed explanations of solutions to specific problems, as requested by participants.
-</p>
-
-<p>
-    More information (April Fool’s): <a href="https://tinyurl.com/aprilfoolsmeet">https://tinyurl.com/aprilfoolsmeet</a>.
-</p>
-
-<p>
-    More information about contest structure: <a href="https://docs.google.com/document/d/e/2PACX-1vSr6aLKg_IjMqKd-ClGpevJ4G7Z0zcHhSTc_M80LCvB-08_Xg7H43FkqUW9TFxOWwmlCUmmaz54j8MN/pub">https://docs.google.com/document/d/e/2PACX-1vSr6aLKg_IjMqKd-ClGpevJ4G7Z0zcHhSTc_M80LCvB-08_Xg7H43FkqUW9TFxOWwmlCUmmaz54j8MN/pub</a>.
-</p>
-
-<p>
-    Fees: None.
-</p>
-
-<h4>
-    Past Meets:
-</h4>
-
-<div>
-    <% for(element of pastMeets) { %> 
-        <h5><%= element.name %></h5>
-    <ul>
-        <% for(key in element.data) { %>
-            <li><%= key[0].toUpperCase() + key.slice(1) %>: <a href="<%= element.data[key] %>"><%= element.data[key] %></a></li>
+    <p class="quote">
+        Life is a math equation. In order to gain the most, you have to know how to convert negatives into positives.
+    </p>
+    
+    <p>
+        Registration (April Fool’s Day): <a href="https://tinyurl.com/regaprilmeet">https://tinyurl.com/regaprilmeet</a>.
+    </p>
+    
+    <p>
+        Description: As Paul Halmos once said, “the only way to learn mathematics is to do mathematics.” At CJLH math meets, our purpose is to provide students with several opportunities to cultivate their learning in mathematics, to enhance their problem solving skills, and ask lots of questions. Our seasonal math meets are held on select holidays, and feature a variety of problems--from algebra and geometry to combinatorics and number theory. Participants have the opportunity to tackle these engaging  problems by competing individually or collaborating with others on teams of two to four people. Following the competition, we give detailed explanations of solutions to specific problems, as requested by participants.
+    </p>
+    
+    <p>
+        More information (April Fool’s): <a href="https://tinyurl.com/aprilfoolsmeet">https://tinyurl.com/aprilfoolsmeet</a>.
+    </p>
+    
+    <p>
+        More information about contest structure: <a href="/cjlh/meet" %>"><%= url + "meet" %></a>.
+    </p>
+    
+    <p>
+        Fees: None.
+    </p>
+    
+    <h4>
+        Past Meets:
+    </h4>
+    
+    <div>
+        <% for(element of pastMeets) { %> 
+            <h5><%= element.name %></h5>
+        <ul>
+            <% for(key in element.data) { %>
+                <li><%= key[0].toUpperCase() + key.slice(1) %>: <a href="<%= element.data[key] %>"><%= element.data[key] %></a></li>
+            <% } %> 
+        </ul>
         <% } %> 
-    </ul>
-    <% } %> 
-</div>
+    </div>    
+</section>
 
-<hr>
-
-<h3>Staff:</h3>
-
-<div>
-    <% for(element of about) { %> 
-        <p><%= element %></p>
-    <% } %> 
-</div>
-
+<%- include("../partials/cjlh/footer.ejs") %> 

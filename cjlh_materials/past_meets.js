@@ -1,6 +1,6 @@
 const pastMeets = [
     {
-        name: "Halloween 2020",
+        name: "Halloween Math Meet",
         date: "October 31, 2020",
         data: {
             agenda: "https://tinyurl.com/halloweenmeet",
@@ -9,7 +9,7 @@ const pastMeets = [
         }
     },
     {
-        name: "Valentine’s Day 2021",
+        name: "Valentine’s Day Math Meet",
         date: "February 14, 2021",
         data: {
             agenda: "https://tinyurl.com/vdmeet",

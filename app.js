@@ -11,15 +11,28 @@ const app = express()
 
 app.set("view-engine", "ejs")
 app.use(express.urlencoded({extended: true}));
+app.use(express.static("public"))
 
-const cjlhroot = "cjlh"
+const root = "https://tranquil-taiga-98785.herokuapp.com"
 
-app.get("/", (req, res) => {
-    res.render("cjlh/index.ejs", {pastMeets: pastMeets, about: about});
+
+// ******* CJLH stuffs
+const cjlhroot = "/cjlh/"
+
+app.get(cjlhroot, (req, res) => {
+    res.render("cjlh/index.ejs", {pastMeets: pastMeets, about: about, url: root + cjlhroot});
 })
 
-app.get("/meet", (req, res) => {
-    res.render("cjlh/meet.ejs", {pastMeets: pastMeets});
+app.get(cjlhroot + "meet", (req, res) => {
+    res.render("cjlh/meet.ejs", {pastMeets: pastMeets, url: root + cjlhroot});
+})
+
+app.get(cjlhroot + "past-meets", (req, res) => {
+    res.render("cjlh/past-meets.ejs", {pastMeets: pastMeets, url: root + cjlhroot})
+})
+
+app.get(cjlhroot + "about", (req, res) => {
+    res.render("cjlh/about.ejs", {about: about, url: root + cjlhroot})
 })
 
 app.listen(process.env.PORT || 3000, (err) => {
