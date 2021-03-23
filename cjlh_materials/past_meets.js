@@ -1,6 +1,7 @@
 const pastMeets = [
     {
         name: "Halloween 2020",
+        date: "October 31, 2020",
         data: {
             agenda: "https://tinyurl.com/halloweenmeet",
             problems: "https://drive.google.com/file/d/17QPBRdcFJCHGsdxYBdIoztrmsOyfPRks/view?usp=sharing",
@@ -9,6 +10,7 @@ const pastMeets = [
     },
     {
         name: "Valentine’s Day 2021",
+        date: "February 14, 2021",
         data: {
             agenda: "https://tinyurl.com/vdmeet",
             problems: "https://drive.google.com/drive/folders/14izTchrnyBBa5xKXdjmqeJDyhQQtdAhj?usp=sharing",

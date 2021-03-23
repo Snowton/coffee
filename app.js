@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
 })
 
 app.get("/meet", (req, res) => {
-    res.render("cjlh/meet.ejs", {pastMeets: pastMeets, about: about});
+    res.render("cjlh/meet.ejs", {pastMeets: pastMeets});
 })
 
 app.listen(process.env.PORT || 3000, (err) => {
