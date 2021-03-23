@@ -13,7 +13,7 @@ app.set("view-engine", "ejs")
 app.use(express.urlencoded({extended: true}));
 app.use(express.static("public"))
 
-const root = "https://tranquil-taiga-98785.herokuapp.com"
+const root = "https://coffee-and-sleep.herokuapp.com"
 
 
 // ******* CJLH stuffs
