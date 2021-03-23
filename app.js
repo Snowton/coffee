@@ -1,14 +1,20 @@
+// ***** actual stuff
 const express = require("express");
 // const bodyParser = require("body-parser") // apparently we don't need body parser anymore!
 const ejs = require("ejs")
 
+// ***** my stuff
+const pastMeets = require("./cjlh_materials/past_meets.js")
+
 const app = express()
 
 app.set("view-engine", "ejs")
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended: true}));
+
+const cjlhroot = "cjlh"
 
 app.get("/", (req, res) => {
-    res.send("glad to have you here");
+    res.render("cjlh/index.ejs", {pastMeets: pastMeets});
 })
 
 app.listen(process.env.PORT || 3000, (err) => {
