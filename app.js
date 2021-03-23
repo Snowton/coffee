@@ -5,6 +5,7 @@ const ejs = require("ejs")
 
 // ***** my stuff
 const pastMeets = require("./cjlh_materials/past_meets.js")
+const about = require("./cjlh_materials/about.js")
 
 const app = express()
 
@@ -14,7 +15,7 @@ app.use(express.urlencoded({extended: true}));
 const cjlhroot = "cjlh"
 
 app.get("/", (req, res) => {
-    res.render("cjlh/index.ejs", {pastMeets: pastMeets});
+    res.render("cjlh/index.ejs", {pastMeets: pastMeets, about: about});
 })
 
 app.listen(process.env.PORT || 3000, (err) => {
