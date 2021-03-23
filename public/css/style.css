@@ -14,6 +14,7 @@ nav h1 {
 }
 
 nav ul {
+    margin: 0 20px 0 auto;
     list-style-type: none;
     display: flex;
 
@@ -21,13 +22,14 @@ nav ul {
     justify-content: flex-end;
 }
 
-nav ul li {
-}
-
-nav ul a {
+nav a {
     text-decoration: none;
-    color: blue;
+    color: black;
     padding: 20px;
     display: flex;
     align-items: center;
+}
+
+nav a:hover {
+    color: grey;
 }
