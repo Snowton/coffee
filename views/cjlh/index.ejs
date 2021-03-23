@@ -1,5 +1,6 @@
 <%- include("../partials/cjlh/header.ejs") %> 
 
+<div>
 <h2>Program Overview</h2>
 <hr>
 <section>
@@ -50,20 +51,11 @@
         Fees: None.
     </p>
     
-    <h4>
-        Past Meets:
-    </h4>
-    
-    <div>
-        <% for(element of pastMeets) { %> 
-            <h5><%= element.name %></h5>
-        <ul>
-            <% for(key in element.data) { %>
-                <li><%= key[0].toUpperCase() + key.slice(1) %>: <a href="<%= element.data[key] %>"><%= element.data[key] %></a></li>
-            <% } %> 
-        </ul>
-        <% } %> 
-    </div>    
+    <p>
+        Past Meets: <a href="/past-meets"><%= url + "past-meets"%></a>
+    </p>    
 </section>
+
+</div>
 
 <%- include("../partials/cjlh/footer.ejs") %> 
