@@ -18,6 +18,10 @@ app.get("/", (req, res) => {
     res.render("cjlh/index.ejs", {pastMeets: pastMeets, about: about});
 })
 
+app.get("/meet", (req, res) => {
+    res.render("cjlh/meet.ejs", {pastMeets: pastMeets, about: about});
+})
+
 app.listen(process.env.PORT || 3000, (err) => {
     if (!err) console.log("successfully started on port 3000 or process.env.PORT");
     else console.log(err);
