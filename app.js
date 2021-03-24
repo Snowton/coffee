@@ -25,15 +25,15 @@ app.get(cjlhroot, (req, res) => {
 })
 
 app.get(cjlhroot + "meet", (req, res) => {
-    res.render("cjlh/meet.ejs", {pastMeets: pastMeets, url: root + cjlhroot});
+    res.render("cjlh/meet.ejs", {pastMeets: pastMeets, url: root + req.headers.host + cjlhroot});
 })
 
 app.get(cjlhroot + "past-meets", (req, res) => {
-    res.render("cjlh/past-meets.ejs", {pastMeets: pastMeets, url: root + cjlhroot})
+    res.render("cjlh/past-meets.ejs", {pastMeets: pastMeets, url: root + req.headers.host + cjlhroot})
 })
 
 app.get(cjlhroot + "about", (req, res) => {
-    res.render("cjlh/about.ejs", {about: about, sponsors: sponsors, url: root + cjlhroot})
+    res.render("cjlh/about.ejs", {about: about, sponsors: sponsors, url: root + req.headers.host + cjlhroot})
 })
 
 app.listen(process.env.PORT || 3000, (err) => {
