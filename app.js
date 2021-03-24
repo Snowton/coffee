@@ -13,14 +13,14 @@ app.set("view-engine", "ejs")
 app.use(express.urlencoded({extended: true}));
 app.use(express.static("public"))
 
-const root = "https://coffee-and-sleep.herokuapp.com"
+const root = "https://"
 
 
 // ******* CJLH stuffs
 const cjlhroot = "/cjlh/"
 
 app.get(cjlhroot, (req, res) => {
-    res.render("cjlh/index.ejs", {pastMeets: pastMeets, about: about, url: root + cjlhroot});
+    res.render("cjlh/index.ejs", {pastMeets: pastMeets, about: about, url: root + req.headers.host + cjlhroot});
 })
 
 app.get(cjlhroot + "meet", (req, res) => {
