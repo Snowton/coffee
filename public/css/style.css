@@ -20,6 +20,16 @@ h3 {
     font-size: 1.5rem;
 }
 
+a {
+    text-decoration: none;
+    color: black;
+    font-family: 'Syne Mono', monospace;
+}
+
+a:hover {
+    color: grey;
+}
+
 /* **************** NAV ******************* */
 
 nav {
@@ -47,15 +57,9 @@ nav ul {
 }
 
 nav a {
-    text-decoration: none;
-    color: black;
     padding: 20px;
     display: flex;
     align-items: center;
-}
-
-nav a:hover {
-    color: grey;
 }
 
 /* *********** RIGHT AFTER NAV ************* */
