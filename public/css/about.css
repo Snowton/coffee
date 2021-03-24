@@ -1,0 +1,11 @@
+.sponsors {
+    display: flex;
+}
+
+.sponsors div {
+    padding: 20px;
+}
+
+.sponsors img {
+    height: 100px;
+}

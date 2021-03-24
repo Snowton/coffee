@@ -6,6 +6,7 @@ const ejs = require("ejs")
 // ***** my stuff
 const pastMeets = require("./cjlh_materials/past_meets.js")
 const about = require("./cjlh_materials/about.js")
+const sponsors = require("./cjlh_materials/sponsors.js")
 
 const app = express()
 
@@ -32,7 +33,7 @@ app.get(cjlhroot + "past-meets", (req, res) => {
 })
 
 app.get(cjlhroot + "about", (req, res) => {
-    res.render("cjlh/about.ejs", {about: about, url: root + cjlhroot})
+    res.render("cjlh/about.ejs", {about: about, sponsors: sponsors, url: root + cjlhroot})
 })
 
 app.listen(process.env.PORT || 3000, (err) => {

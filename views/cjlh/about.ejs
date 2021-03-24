@@ -10,6 +10,19 @@
             <%- element %>
         <% } %> 
     </div>
+
+    <hr>
+
+    <h2>Sponsors</h2>
+
+    <div class="sponsors">
+        <% for(sponsor of sponsors) { %> 
+            <div>
+                <img src="/img/<%= sponsor.img %>" alt="">
+                <p><%= sponsor.name %></p>
+            </div>
+        <% } %> 
+    </div>
 </section>
 
 <%- include("../partials/cjlh/footer.ejs") %> 
