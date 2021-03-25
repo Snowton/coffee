@@ -36,6 +36,10 @@ app.get(cjlhroot + "about", (req, res) => {
     res.render("cjlh/about.ejs", {about: about, sponsors: sponsors, url: root + req.headers.host + cjlhroot})
 })
 
+app.get(cjlhroot + "*", (req, res) => {
+    res.render("cjlh/404.ejs")
+})
+
 app.listen(process.env.PORT || 3000, (err) => {
     if (!err) console.log("successfully started on port 3000 or process.env.PORT");
     else console.log(err);
