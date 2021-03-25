@@ -16,6 +16,7 @@ app.use(express.static("public"))
 
 const root = "https://"
 
+// **** BLOG stuffs
 
 // ******* CJLH stuffs
 const cjlhroot = "/cjlh/"
