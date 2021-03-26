@@ -119,6 +119,7 @@ app.get("/login", (req, res) => {
 
 app.get("/", (req, res) => {
     Post.find({}, {}, {limit: 3, sort: {date: -1}}, (err, posts) => {
+        if(err) console.log(err);
         if(req.isAuthenticated()) {
             User.findOne({id: req.user}, (err, user) => {
                 if(user) {
