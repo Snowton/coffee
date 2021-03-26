@@ -118,8 +118,9 @@ app.get("/login", (req, res) => {
 // ************************* THEIR SIDE
 
 app.get("/", (req, res) => {
+    console.lot("hi")
     Post.find({}, {}, {limit: 3, sort: {date: -1}}, (err, posts) => {
-        if(err) console.log(err);
+        if(err) console.log(posts);
         if(req.isAuthenticated()) {
             User.findOne({id: req.user}, (err, user) => {
                 if(err) console.log(err);
