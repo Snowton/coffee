@@ -92,7 +92,7 @@ passport.use(new GoogleStrategy (
 app.get('/auth/google/callback',  
     passport.authenticate('google', { failureRedirect: '/', session: true }),
     (req, res) => {
-        // console.log('wooo we authenticated, here is our user object:', req.user);
+        console.log('wooo we authenticated, here is our user object:', req.user);
         // res.json(req.user); // idk why they had this
         res.redirect('/');
     }
