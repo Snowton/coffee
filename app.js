@@ -122,6 +122,7 @@ app.get("/", (req, res) => {
         if(req.isAuthenticated()) {
             User.findOne({id: req.user}, (err, user) => {
                 if(user) {
+                    console.log("am happ")
                     res.render("blog/home.ejs", {posts: posts});
                 } else res.render("blog/home.ejs", {posts: posts});
             })
