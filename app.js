@@ -118,14 +118,10 @@ app.get("/login", (req, res) => {
 // ************************* THEIR SIDE
 
 app.get("/", (req, res) => {
-    console.log("hi")
     Post.find({}, {}, {limit: 10, sort: {date: -1}}, (err, posts) => {
-        if(err) console.log("hihihi");
         if(req.isAuthenticated()) {
             User.findOne({id: req.user}, (err, user) => {
-                if(err) console.log("err");
                 if(user) {
-                    console.log("am happ")
                     res.render("blog/home.ejs", {posts: posts});
                 } else res.render("blog/home.ejs", {posts: posts});
             })
