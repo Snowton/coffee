@@ -5,7 +5,7 @@
 <section class="tiny">
     <div>
         <% posts.forEach(post => { %>
-            <h3><%= post.title %> </h3>
+            <h3><%= post.title %> <% if(admin) { %><span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span><% } %></h3>
             <p><%= post.body.slice(0, 100) + (post.body.length > 100 ? "..." : "") %> <a href="/posts/<%= post.url %>"><%= post.body.length > 100 ? "Read more" : "Go to post" %></a></p>
         <% }); %>
     </div>

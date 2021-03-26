@@ -122,11 +122,11 @@ app.get("/", (req, res) => {
         if(req.isAuthenticated()) {
             User.findOne({id: req.user}, (err, user) => {
                 if(user) {
-                    res.render("blog/home.ejs", {posts: posts});
-                } else res.render("blog/home.ejs", {posts: posts});
+                    res.render("blog/home.ejs", {posts: posts, admin: true});
+                } else res.render("blog/home.ejs", {posts: posts, admin: false});
             })
         } else {
-            res.render("blog/home.ejs", {posts: posts});
+            res.render("blog/home.ejs", {posts: posts, admin: false});
         }
     })
 })
@@ -141,11 +141,11 @@ app.get("/posts/:post", (req, res) => {
             if(req.isAuthenticated()) {
                 User.findOne({id: req.user}, (err, user) => {
                     if(user) {
-                        res.render("blog/post.ejs", {post: {title: post.title, body: post.body}})
-                    } else res.render("blog/post.ejs", {post: {title: post.title, body: post.body}});
+                        res.render("blog/post.ejs", {post: {title: post.title, body: post.body, admin: true}})
+                    } else res.render("blog/post.ejs", {post: {title: post.title, body: post.body, admin: false}});
                 })
             } else {
-                res.render("blog/post.ejs", {post: {title: post.title, body: post.body}});
+                res.render("blog/post.ejs", {post: {title: post.title, body: post.body, admin: false}});
             }
         }
     })
@@ -175,11 +175,11 @@ app.get("/blog", (req, res) => {
             if(req.isAuthenticated()) {
                 User.findOne({id: req.user}, (err, user) => {
                     if(user) {
-                        res.render("blog/blog.ejs", {years: years});
-                    } else res.render("blog/blog.ejs", {years: years});
+                        res.render("blog/blog.ejs", {years: years, admin: true});
+                    } else res.render("blog/blog.ejs", {years: years, admin: false});
                 })
             } else {
-                res.render("blog/blog.ejs", {years: years});
+                res.render("blog/blog.ejs", {years: years, admin: false});
             }
         } else {
             console.log(err)
