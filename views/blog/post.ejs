@@ -1,5 +1,5 @@
 <%- include("partials/header") %> 
-<h1><%= post.title %> <span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span></h1>
+<h1><%= post.title %> <% if(admin) { %><span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span><% } %></h1>
 
 <section class="tiny">
     <div class="post">

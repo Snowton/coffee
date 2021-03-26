@@ -79,13 +79,14 @@ passport.use(new GoogleStrategy (
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
         callbackURL: (process.env.CALLBACK || 'http://localhost:3000') + '/auth/google/callback',
-        scope: ['email'],
+        scope: ['email', 'profile'],
     },
     (accessToken, refreshToken, profile, cb) => {
         // console.log('Our user authenticated with Google, and Google sent us back this profile info identifying the authenticated user:', profile);
         // can put anything into req.user, we choose to send just the raw profile (i.e. email)
 
-        return cb(null, profile.id);
+        console.log(profile)
+        return cb(null, {id: profile.id, name: profile.name, displayName: profile.displayName, emails: profile.emails});
     },
 ));
 
@@ -106,6 +107,11 @@ app.get("/login", (req, res) => {
     }
 })
 
+app.get("/logout", (req, res) => {
+    req.logout();
+    res.redirect("/");
+})
+
 
 
 
@@ -120,13 +126,13 @@ app.get("/login", (req, res) => {
 app.get("/", (req, res) => {
     Post.find({}, {}, {limit: 10, sort: {date: -1}}, (err, posts) => {
         if(req.isAuthenticated()) {
-            User.findOne({id: req.user}, (err, user) => {
+            User.findOne({id: req.user.id}, (err, user) => {
                 if(user) {
-                    res.render("blog/home.ejs", {posts: posts, admin: true});
-                } else res.render("blog/home.ejs", {posts: posts, admin: false});
+                    res.render("blog/home.ejs", {posts: posts, admin: true, name: (req.user.name.givenName ? req.user.name.givenName : req.user.displayName)});
+                } else res.render("blog/home.ejs", {posts: posts, admin: false, name: (req.user.name.givenName ? req.user.name.givenName : req.user.displayName)});
             })
         } else {
-            res.render("blog/home.ejs", {posts: posts, admin: false});
+            res.render("blog/home.ejs", {posts: posts, admin: false, name: false});
         }
     })
 })
@@ -139,13 +145,13 @@ app.get("/posts/:post", (req, res) => {
             post.body = (post.body.replace(/\\r\\n/g, "</p><p>"))
             console.log(post.body)
             if(req.isAuthenticated()) {
-                User.findOne({id: req.user}, (err, user) => {
+                User.findOne({id: req.user.id}, (err, user) => {
                     if(user) {
-                        res.render("blog/post.ejs", {post: {title: post.title, body: post.body, admin: true}})
-                    } else res.render("blog/post.ejs", {post: {title: post.title, body: post.body, admin: false}});
+                        res.render("blog/post.ejs", {post: {title: post.title, body: post.body}, admin: true})
+                    } else res.render("blog/post.ejs", {post: {title: post.title, body: post.body}, admin: false});
                 })
             } else {
-                res.render("blog/post.ejs", {post: {title: post.title, body: post.body, admin: false}});
+                res.render("blog/post.ejs", {post: {title: post.title, body: post.body}, admin: false});
             }
         }
     })
@@ -173,7 +179,7 @@ app.get("/blog", (req, res) => {
             }
 
             if(req.isAuthenticated()) {
-                User.findOne({id: req.user}, (err, user) => {
+                User.findOne({id: req.user.id}, (err, user) => {
                     if(user) {
                         res.render("blog/blog.ejs", {years: years, admin: true});
                     } else res.render("blog/blog.ejs", {years: years, admin: false});
@@ -222,7 +228,7 @@ const getUrl = (title, cb) => {
 
 app.route("/compose").get((req, res) => {
     if(req.isAuthenticated()) {
-        User.findOne({id: req.user}, (err, user) => {
+        User.findOne({id: req.user.id}, (err, user) => {
             if(user) {
                 res.render("blog/compose.ejs", {post: {}});
             } else res.redirect("/");
@@ -232,7 +238,7 @@ app.route("/compose").get((req, res) => {
     }
 }).post((req, res) => {
     if(req.isAuthenticated()) {
-        User.findOne({id: req.user}, (err, user) => {
+        User.findOne({id: req.user.id}, (err, user) => {
             if(user) {
                 getUrl(req.body.title, (url) => {
                     let now = Date.now();
@@ -259,7 +265,7 @@ app.route("/compose").get((req, res) => {
 
 app.route("/compose/:post").get((req, res) => {
     if(req.isAuthenticated()) {
-        User.findOne({id: req.user}, (err, user) => {
+        User.findOne({id: req.user.id}, (err, user) => {
             if(user) {
                 Post.findOne({url: req.params.post}, (err, post) => {
                     if(!err) {
@@ -275,7 +281,7 @@ app.route("/compose/:post").get((req, res) => {
     }
 }).post((req, res) => {
     if(req.isAuthenticated()) {
-        User.findOne({id: req.user}, (err, user) => {
+        User.findOne({id: req.user.id}, (err, user) => {
             if(user) {
                 getUrl(req.body.title, (url) => {
                     Post.updateOne({url: req.params.post}, {title: req.body.title, body: req.body.message, url: url}, (err, post) => {
