@@ -1,0 +1,20 @@
+<%- include("partials/header") %> 
+
+<h1>Posts</h1>
+
+<ul>
+    <% for (year in years) { %> 
+        <h2><%= year %></h2>
+        <li><ul>
+        <% for (month in years[year]) { %>
+            <h3><%= month %></h3>
+            <% for (post of years[year][month]) { %>
+                <a href="/posts/<%= post.url %>"><li><%= post.title %></li></a>
+            <% } %> 
+        <% } %> 
+        </ul></li>
+    <% } %> 
+</ul>
+
+
+<%- include("partials/footer") %> 
