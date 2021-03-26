@@ -147,11 +147,11 @@ app.get("/posts/:post", (req, res) => {
             if(req.isAuthenticated()) {
                 User.findOne({id: req.user.id}, (err, user) => {
                     if(user) {
-                        res.render("blog/post.ejs", {post: {title: post.title, body: post.body}, admin: true})
-                    } else res.render("blog/post.ejs", {post: {title: post.title, body: post.body}, admin: false});
+                        res.render("blog/post.ejs", {post: post, admin: true})
+                    } else res.render("blog/post.ejs", {post: post, admin: false});
                 })
             } else {
-                res.render("blog/post.ejs", {post: {title: post.title, body: post.body}, admin: false});
+                res.render("blog/post.ejs", {post: post, admin: false});
             }
         }
     })
@@ -201,7 +201,7 @@ app.get("/blog", (req, res) => {
 // ********************* MY SIDE
 
 // DO NOT input titles that are a previous title + "-[integer number]"
-const getUrl = (title, cb) => {
+const getUrl = (title, change=false, cb) => {
     let url = title.toLowerCase().replace(/\s/g, "-")
     Post.find({title: title}, {url: 1}, {sort: {url: 1}}, (err, posts) => {
         if(posts) {
@@ -212,6 +212,10 @@ const getUrl = (title, cb) => {
 
             for(post of posts) {
                 console.log(url + (count > 0 ? "-" + count : ""), post.url)
+                if(post.url === change) {
+                    newUrl = change;
+
+                }
                 if((url + (count > 0 ? "-" + count : "")) != post.url) {
                     newUrl = url + (count > 0 ? "-" + count : "");
                     break;
@@ -240,7 +244,7 @@ app.route("/compose").get((req, res) => {
     if(req.isAuthenticated()) {
         User.findOne({id: req.user.id}, (err, user) => {
             if(user) {
-                getUrl(req.body.title, (url) => {
+                getUrl(req.body.title, null, (url) => {
                     let now = Date.now();
 
                     console.log(url)
@@ -283,7 +287,7 @@ app.route("/compose/:post").get((req, res) => {
     if(req.isAuthenticated()) {
         User.findOne({id: req.user.id}, (err, user) => {
             if(user) {
-                getUrl(req.body.title, (url) => {
+                getUrl(req.body.title, req.params.post, (url) => {
                     Post.updateOne({url: req.params.post}, {title: req.body.title, body: req.body.message, url: url}, (err, post) => {
                         if(!err) res.redirect("/");
                         else console.log(err);
