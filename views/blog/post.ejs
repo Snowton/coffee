@@ -1,4 +1,9 @@
 <%- include("partials/header") %> 
-<h1><%= post.title %> </h1>
-<p><%= post.body %></p>
+<h1><%= post.title %></h1>
+
+<section class="tiny">
+    <div class="post">
+        <p><%- post.body %></p>
+    </div>
+</section>
 <%- include("partials/footer") %> 

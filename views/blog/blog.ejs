@@ -2,19 +2,26 @@
 
 <h1>Posts</h1>
 
-<ul>
-    <% for (year in years) { %> 
-        <h2><%= year %></h2>
-        <li><ul>
-        <% for (month in years[year]) { %>
-            <h3><%= month %></h3>
-            <% for (post of years[year][month]) { %>
-                <a href="/posts/<%= post.url %>"><li><%= post.title %></li></a>
-            <% } %> 
+
+<section class="tiny">
+    <div class="blog">
+        <% for (year in years) { %> 
+            <h2><%= year %></h2>
+            <ul>
+            <li>
+            <% for (month in years[year]) { %>
+                <h3><%= month %></h3>
+                <ul>
+                <% for (post of years[year][month]) { %>
+                    <a href="/posts/<%= post.url %>"><li><%= post.title %></li></a>
+                <% } %> 
+                </ul>
+            <% } %>
+            </ul> 
+            </li>
         <% } %> 
-        </ul></li>
-    <% } %> 
-</ul>
+    </div>
+</section>
 
 
 <%- include("partials/footer") %> 

@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const passport = require('passport');  
 const GoogleStrategy = require('passport-google-oauth20').Strategy;  
 const session = require('express-session');
-const _ = require("lodash/collection")
+const _ = require("lodash")
 
 // ***** my stuff
 const pastMeets = require("./cjlh_materials/past_meets.js")
@@ -133,14 +133,20 @@ app.get("/", (req, res) => {
 
 app.get("/posts/:post", (req, res) => {
     Post.findOne({url: req.params.post}, (err, post) => {
-        if(req.isAuthenticated()) {
-            User.findOne({id: req.user}, (err, user) => {
-                if(user) {
-                    res.render("blog/post.ejs", {post: {title: post.title, body: post.body}})
-                } else res.render("blog/post.ejs", {post: {title: post.title, body: post.body}});
-            })
-        } else {
-            res.render("blog/post.ejs", {post: {title: post.title, body: post.body}});
+        if(err || !post) res.redirect("/"); // 404
+        else {
+            post.body = "<p>" + JSON.stringify(post.body).slice(1, -1) + "</p>"
+            post.body = (post.body.replace(/\\r\\n/g, "</p><p>"))
+            console.log(post.body)
+            if(req.isAuthenticated()) {
+                User.findOne({id: req.user}, (err, user) => {
+                    if(user) {
+                        res.render("blog/post.ejs", {post: {title: post.title, body: post.body}})
+                    } else res.render("blog/post.ejs", {post: {title: post.title, body: post.body}});
+                })
+            } else {
+                res.render("blog/post.ejs", {post: {title: post.title, body: post.body}});
+            }
         }
     })
 })
@@ -188,6 +194,32 @@ app.get("/blog", (req, res) => {
 
 // ********************* MY SIDE
 
+// DO NOT input titles that are a previous title + "-[integer number]"
+const getUrl = (title, cb) => {
+    let url = title.toLowerCase().replace(/\s/g, "-")
+    Post.find({title: title}, {url: 1}, {sort: {url: 1}}, (err, posts) => {
+        if(posts) {
+            let count = 0;
+            console.log(posts)
+
+            newUrl = url + (posts.length > 0 ? "-" + (posts.length + 1) : "")
+
+            for(post of posts) {
+                console.log(url + (count > 0 ? "-" + count : ""), post.url)
+                if((url + (count > 0 ? "-" + count : "")) != post.url) {
+                    newUrl = url + (count > 0 ? "-" + count : "");
+                    break;
+                }
+                console.log(count)
+                count++;
+            }
+        }
+
+        console.log(newUrl)
+        cb(newUrl);
+    })
+}
+
 app.route("/compose").get((req, res) => {
     if(req.isAuthenticated()) {
         User.findOne({id: req.user}, (err, user) => {
@@ -202,22 +234,26 @@ app.route("/compose").get((req, res) => {
     if(req.isAuthenticated()) {
         User.findOne({id: req.user}, (err, user) => {
             if(user) {
-                let now = Date.now();
+                getUrl(req.body.title, (url) => {
+                    let now = Date.now();
 
-                const post = new Post({
-                    title: req.body.title,
-                    body: req.body.message,
-                    url: req.body.title.toLowerCase().replace(/\s/g, "-"),
-                    date: now
-                })
+                    console.log(url)
 
-                post.save(err => {
-                    if(!err) res.redirect("/");
+                    const post = new Post({
+                        title: req.body.title,
+                        body: req.body.message,
+                        url: url,
+                        date: now
+                    })
+
+                    post.save(err => {
+                        if(!err) res.redirect("/");
+                    })
                 })
-            } else res.redirect("/");
+            } else res.redirect("/"); // 404
         })
     } else {
-        res.redirect("/");
+        res.redirect("/"); // 404
     }
 })
 
@@ -226,24 +262,31 @@ app.route("/compose/:post").get((req, res) => {
         User.findOne({id: req.user}, (err, user) => {
             if(user) {
                 Post.findOne({url: req.params.post}, (err, post) => {
-                    res.render("blog/compose.ejs", {post: post})
+                    if(!err) {
+                        res.render("blog/compose.ejs", {post: post})
+                    } else {
+                        res.redirect("/"); // 404
+                    }
                 });
-            } else res.redirect("/");
+            } else res.redirect("/"); // 404
         })
     } else {
-        res.redirect("/");
+        res.redirect("/"); // 404
     }
 }).post((req, res) => {
     if(req.isAuthenticated()) {
         User.findOne({id: req.user}, (err, user) => {
             if(user) {
-                Post.updateOne({url: req.params.post}, {title: req.body.title, body: req.body.message}, (err, post) => {
-                    if(!err) res.redirect("/");
-                });
-            } else res.redirect("/");
+                getUrl(req.body.title, (url) => {
+                    Post.updateOne({url: req.params.post}, {title: req.body.title, body: req.body.message, url: url}, (err, post) => {
+                        if(!err) res.redirect("/");
+                        else console.log(err);
+                    });
+                })
+            } else res.redirect("/"); // 404
         })
     } else {
-        res.redirect("/");
+        res.redirect("/"); // 404
     }
 })
 

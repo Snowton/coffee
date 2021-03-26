@@ -1,10 +1,14 @@
 <%- include("partials/header") %> 
 
-<h1>Here are some blog posts</h1>
+<h1>Welcome!</h1>
 
-<% posts.forEach(post => { %>
-    <h3><%= post.title %> </h3>
-    <p><%= post.body.slice(0, 100) + (post.body.length > 100 ? "..." : "") %> <a href="/posts/<%= post.url %>"><%= post.body.length > 100 ? "Read more" : "Go to post" %></a></p>
-<% }); %>
+<section class="tiny">
+    <div>
+        <% posts.forEach(post => { %>
+            <h3><%= post.title %> </h3>
+            <p><%= post.body.slice(0, 100) + (post.body.length > 100 ? "..." : "") %> <a href="/posts/<%= post.url %>"><%= post.body.length > 100 ? "Read more" : "Go to post" %></a></p>
+        <% }); %>
+    </div>
+</section>
 
 <%- include("partials/footer") %> 

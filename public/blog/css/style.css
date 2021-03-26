@@ -1,5 +1,14 @@
-body {
+html, body {
+    --background-hf: #ffe6ca;
+    --hf-text: #966c3b;
+    --body-text: #4e3620;
+    
     margin: 0;
+    background-color: var(--background-hf);
+}
+
+h2, h3, h4, h5, h6 {
+    color: #4e3620;
 }
 
 nav {
@@ -7,7 +16,12 @@ nav {
     position: fixed;
     width: 100%;
     z-index: 10;
-    background-color: white;
+    background-color: var(--background-hf);
+    color: var(--hf-text);
+    text-transform: lowercase;
+
+    font-size: 1.5rem;
+    box-shadow: 0 2px 5px;
 }
 
 nav h1 {
@@ -18,7 +32,7 @@ nav h1 {
 }
 
 nav ul {
-    margin: 0 20px 0 auto;
+    margin: 0 0 0 auto;
     list-style-type: none;
     display: flex;
 
@@ -27,21 +41,61 @@ nav ul {
 }
 
 nav a {
-    padding: 20px;
+    padding: 20px 30px;
     display: flex;
     align-items: center;
+    text-decoration: none;
+
+    color: var(--hf-text);
+}
+
+nav a:hover {
+    color: #4e3620;
+    /* background-color: #ebd5bd; */
 }
 
 /* *********** RIGHT AFTER NAV ************* */
 
 .spacing {
     height: 70px;
+    background-color: white;
 }
 
  /* *************** GENERAL SPACING FOR WEBSITE *********** */
 
 .website {
-    margin: 40px;
+    padding: 40px;
+    background-color: white;
+    color: #333;
+    font-size: 1.25rem;
+}
+
+.website h1 {
+    text-align: center;
+    font-size: 4rem;
+}
+
+.website .tiny {
+    display: flex;
+    justify-content: center;
+}
+
+.website .tiny > div {
+    width: 40%;
+}
+
+.website a {
+    text-decoration: none;
+    color: #151515;
+    font-weight: bold;
+}
+
+.website a:hover {
+    color: #966c3b;
+}
+
+.website ul {
+    list-style-type: none;
 }
 
 /* ************** FOOTER ***************** */
@@ -49,4 +103,7 @@ nav a {
 footer {
     padding: 40px;
     text-align: center;
+    background-color: var(--background-hf);
+    color: var(--hf-text);
+    box-shadow: 0 -2px;
 }
