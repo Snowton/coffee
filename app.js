@@ -134,6 +134,34 @@ const homeFind = (request, cb) => {
     })
 }
 
+const blogFind = (request, cb) => {
+    const years = {}
+
+    Post.find(request, {_id: 0, body: 0}, {sort: {date: 1}}, (err, posts) => {
+        if(posts) {
+            for(post of posts) {
+                year = post.date.getYear() + 1900
+                if(!years[year]) {
+                    years[year] = {};
+                }
+
+                months = years[year]
+                month = post.date.toLocaleString('default', { month: 'long' })
+
+                if(!months[month]) {
+                    months[month] = []
+                }
+
+                months[month] = [...months[month], post]
+            }
+
+            cb(years);
+        } else {
+            console.log(err)
+        }
+    })
+}
+
 app.get("/", (req, res) => {
     let request = {published: true}
     if(req.isAuthenticated()) {
@@ -177,39 +205,25 @@ app.get("/posts/:post", (req, res) => {
 })
 
 app.get("/blog", (req, res) => {
-    const years = {}
-
-    Post.find({published: true}, {_id: 0, body: 0}, {sort: {date: 1}}, (err, posts) => {
-        if(posts) {
-            for(post of posts) {
-                year = post.date.getYear() + 1900
-                if(!years[year]) {
-                    years[year] = {};
-                }
-
-                months = years[year]
-                month = post.date.toLocaleString('default', { month: 'long' })
-
-                if(!months[month]) {
-                    months[month] = []
-                }
-
-                months[month] = [...months[month], post]
-            }
-
-            if(req.isAuthenticated()) {
-                User.findOne({id: req.user.id}, (err, user) => {
-                    if(user) {
-                        res.render("blog/blog.ejs", {years: years, admin: true});
-                    } else res.render("blog/blog.ejs", {years: years, admin: false});
+    let request = {published: true}
+    if(req.isAuthenticated()) {
+        User.findOne({id: req.user.id}, (err, user) => {
+            if(user) {
+                request = {}
+                blogFind(request, (years) => {
+                    res.render("blog/blog.ejs", {years: years, admin: true});
                 })
             } else {
-                res.render("blog/blog.ejs", {years: years, admin: false});
+                blogFind(request, (years) => {
+                    res.render("blog/blog.ejs", {years: years, admin: false});
+                })
             }
-        } else {
-            console.log(err)
-        }
-    })
+        })
+    } else {
+        blogFind(request, (years) => {
+            res.render("blog/blog.ejs", {years: years, admin: false});
+        })
+    }
 })
 
 
@@ -274,6 +288,7 @@ app.route("/compose").get((req, res) => {
         res.redirect("/");
     }
 }).post((req, res) => {
+    console.log(req.body);
     if(req.isAuthenticated()) {
         User.findOne({id: req.user.id}, (err, user) => {
             if(user) {
@@ -338,10 +353,9 @@ app.route("/compose/:post").get((req, res) => {
         User.findOne({id: req.user.id}, (err, user) => {
             if(user) {
                 let request = {}
-                console.log(req.body)
+                let redirect = false
 
                 if(req.body.publish) {
-                    console.log("hi")
                     request.published = true
                     redirect = true
                 } else if(req.body.unpublish) {

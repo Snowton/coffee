@@ -13,7 +13,11 @@
                 <h3><%= month %></h3>
                 <ul>
                 <% for (post of years[year][month]) { %>
-                    <li><% if(admin) { %><span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span><% } %> <a href="/posts/<%= post.url %>"><%= post.title %></a></li>
+                    <li><% if(admin) { %><span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span>
+                        <form action="/compose/<%= post.url %>" method="POST" class="homeform">
+                            <% if(post.published) { %><button name="unpublish" value="true" type="submit"><i class="fas fa-angle-left"></i></button><% } else { %><button name="publish" value="true" type="submit"><i class="fas fa-angle-right"></i></button><% } %> 
+                        </form>
+                        <% } %> <a href="/posts/<%= post.url %>"><%= post.title %></a></li>
                 <% } %> 
                 </ul>
             <% } %>
