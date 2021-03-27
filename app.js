@@ -160,7 +160,7 @@ app.get("/posts/:post", (req, res) => {
 app.get("/blog", (req, res) => {
     const years = {}
 
-    Post.find({}, {_id: 0, body: 0}, {sort: {date: -1}}, (err, posts) => {
+    Post.find({}, {_id: 0, body: 0}, {sort: {date: 1}}, (err, posts) => {
         if(posts) {
             for(post of posts) {
                 year = post.date.getYear() + 1900

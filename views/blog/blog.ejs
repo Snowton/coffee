@@ -13,7 +13,7 @@
                 <h3><%= month %></h3>
                 <ul>
                 <% for (post of years[year][month]) { %>
-                    <a href="/posts/<%= post.url %>"><li><%= post.title %></li> <% if(admin) { %><span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span><% } %></a>
+                    <li><% if(admin) { %><span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span><% } %> <a href="/posts/<%= post.url %>"><%= post.title %></a></li>
                 <% } %> 
                 </ul>
             <% } %>
