@@ -28,7 +28,8 @@ const postSchema = new mongoose.Schema({
     title: String,
     body: String,
     url: String,
-    date: Date
+    date: Date,
+    published: Boolean,
 });
 
 const userSchema = new mongoose.Schema({
@@ -123,18 +124,37 @@ app.get("/logout", (req, res) => {
 
 // ************************* THEIR SIDE
 
-app.get("/", (req, res) => {
-    Post.find({}, {}, {limit: 10, sort: {date: -1}}, (err, posts) => {
-        if(req.isAuthenticated()) {
-            User.findOne({id: req.user.id}, (err, user) => {
-                if(user) {
-                    res.render("blog/home.ejs", {posts: posts, admin: true, name: (req.user.name.givenName ? req.user.name.givenName : req.user.displayName)});
-                } else res.render("blog/home.ejs", {posts: posts, admin: false, name: (req.user.name.givenName ? req.user.name.givenName : req.user.displayName)});
-            })
-        } else {
-            res.render("blog/home.ejs", {posts: posts, admin: false, name: false});
-        }
+const htmlify = (str) => {
+    return ("<p>" + str.replace(/\r\n/g, " </p> <p> ") + "</p>");
+}
+
+const homeFind = (request, cb) => {
+    Post.find(request, {}, {limit: 10, sort: {date: -1}}, (err, posts) => {
+        cb(posts)
     })
+}
+
+app.get("/", (req, res) => {
+    let request = {published: true}
+    if(req.isAuthenticated()) {
+        User.findOne({id: req.user.id}, (err, user) => {
+            if(user) {
+                request = {}
+                posts = homeFind(request, (posts) => {
+                    res.render("blog/home.ejs", {posts: posts, admin: true, name: (req.user.name.givenName ? req.user.name.givenName : req.user.displayName)});
+                })
+            } else {
+                posts = homeFind(request, (posts) => {
+                    res.render("blog/home.ejs", {posts: posts, admin: false, name: (req.user.name.givenName ? req.user.name.givenName : req.user.displayName)});
+                })
+            }
+        })
+    } else {
+        posts = homeFind(request, (posts) => {
+            res.render("blog/home.ejs", {posts: posts, admin: false, name: false});
+        })
+    }
+    
 })
 
 app.get("/posts/:post", (req, res) => {
@@ -142,7 +162,7 @@ app.get("/posts/:post", (req, res) => {
         if(err || !post) res.redirect("/"); // 404
         else {
             // post.body = "<p> " + JSON.stringify(post.body).slice(1, -1) + " </p>"
-            post.body = ("<p>" + post.body.replace(/\r\n/g, " </p> <p> ") + "</p>")
+            post.body = htmlify(post.body)
             if(req.isAuthenticated()) {
                 User.findOne({id: req.user.id}, (err, user) => {
                     if(user) {
@@ -159,7 +179,7 @@ app.get("/posts/:post", (req, res) => {
 app.get("/blog", (req, res) => {
     const years = {}
 
-    Post.find({}, {_id: 0, body: 0}, {sort: {date: 1}}, (err, posts) => {
+    Post.find({published: true}, {_id: 0, body: 0}, {sort: {date: 1}}, (err, posts) => {
         if(posts) {
             for(post of posts) {
                 year = post.date.getYear() + 1900
@@ -229,10 +249,24 @@ const getUrl = (title, change=false, cb) => {
     })
 }
 
+const updateAndRedirect = (url, request, redirect, res) => {
+    Post.updateOne({url: url}, request, (err, post) => {
+        if(!err) {
+            if(redirect) {
+                res.redirect("/");
+            } else {
+                res.redirect("/compose/" + url)
+            }
+        }
+        else console.log(err);
+    });
+}
+
 app.route("/compose").get((req, res) => {
     if(req.isAuthenticated()) {
         User.findOne({id: req.user.id}, (err, user) => {
             if(user) {
+                html = "[Compiled code will appear here.]"
                 res.render("blog/compose.ejs", {post: {}});
             } else res.redirect("/");
         })
@@ -246,17 +280,32 @@ app.route("/compose").get((req, res) => {
                 getUrl(req.body.title, null, (url) => {
                     let now = Date.now();
 
-                    console.log(url)
+                    let published = false;
+
+                    if(req.body.publish) {
+                        published = true
+                    } else if(req.body.unpublished) {
+                        published = false
+                    }
 
                     const post = new Post({
                         title: req.body.title,
                         body: req.body.message,
                         url: url,
-                        date: now
+                        date: now,
+                        published: published
                     })
 
                     post.save(err => {
-                        if(!err) res.redirect("/");
+                        if(!err) {
+                            if(req.body.publish) {
+                                res.redirect("/");
+                            } else if(req.body.save) {
+                                res.redirect("/compose/" + url)
+                            } else if(req.body.unpublish) {
+                                res.redirect("/")
+                            }
+                        }
                     })
                 })
             } else res.redirect("/"); // 404
@@ -271,8 +320,10 @@ app.route("/compose/:post").get((req, res) => {
         User.findOne({id: req.user.id}, (err, user) => {
             if(user) {
                 Post.findOne({url: req.params.post}, (err, post) => {
+                    html = htmlify(post.body)
+                    if(html === "") html = "[Compiled code will appear here.]"
                     if(!err) {
-                        res.render("blog/compose.ejs", {post: post})
+                        res.render("blog/compose.ejs", {post: post, html: html})
                     } else {
                         res.redirect("/"); // 404
                     }
@@ -286,12 +337,31 @@ app.route("/compose/:post").get((req, res) => {
     if(req.isAuthenticated()) {
         User.findOne({id: req.user.id}, (err, user) => {
             if(user) {
-                getUrl(req.body.title, req.params.post, (url) => {
-                    Post.updateOne({url: req.params.post}, {title: req.body.title, body: req.body.message, url: url}, (err, post) => {
-                        if(!err) res.redirect("/");
-                        else console.log(err);
-                    });
-                })
+                let request = {}
+                console.log(req.body)
+
+                if(req.body.publish) {
+                    console.log("hi")
+                    request.published = true
+                    redirect = true
+                } else if(req.body.unpublish) {
+                    request.published = false
+                    redirect = true
+                }
+
+                if(req.body.title) {
+                    request.title = req.body.title
+                    request.body = req.body.message
+
+                    getUrl(req.body.title, req.params.post, (url) => {
+                        request.url = url
+
+                        updateAndRedirect(url, request, redirect, res)
+                    })
+                } else {
+                    updateAndRedirect(req.params.post, request, redirect, res)
+                }
+
             } else res.redirect("/"); // 404
         })
     } else {

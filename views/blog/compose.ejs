@@ -1,23 +1,35 @@
 <%- include("partials/header") %> 
 <h1>Compose</h1>
 
-<section class="tiny">
+<section>
     <div class="compose">
-        <form action="/compose/<%= post.url %>" method="post">
-            <div>
-                <label for="title">Title</label>
-                <input type="text" name="title" value="<%= post.title ? post.title : "" %>" placeholder="An awesome title">
-            </div>
-            <div>
-                <label for="message">Post</label>
-                <div class="grow-wrap">
-                    <textarea name="message" onInput="this.parentNode.dataset.replicatedValue = this.value" placeholder="Start typing here"><%= post.body ? post.body : "" %></textarea>
+        <section>
+            <form action="/compose/<%= post.url %>" method="post">
+                <div>
+                    <label for="title">Title</label>
+                    <input type="text" name="title" value="<%= post.title ? post.title : "" %>" placeholder="An awesome title">
                 </div>
+                <hr>
+                <div>
+                    <label for="message">Post</label>
+                    <div class="grow-wrap">
+                        <textarea name="message" onInput="this.parentNode.dataset.replicatedValue = this.value" placeholder="Start typing here"><%= post.body ? post.body : "" %></textarea>
+                        <div class="helper"><%= post.body ? post.body : "" %></div>
+                    </div>
+                </div>
+                <div class="btn">
+                    <button name="publish" value="true" type="submit">Publish</button>
+                    <button name="save" value="true" type="submit">Save</button>
+                    <button name="unpublish" value="true" type="submit">Unpublish</button>
+                </div>
+            </form>
+        </section>
+        <section>
+            <div>
+                <h3>Preview:</h3>
+                <%- html %>
             </div>
-            <div class="btn">
-                <button type="submit">Publish</button>
-            </div>
-        </form>
+        </section>
     </div>
 </section>
 <%- include("partials/footer") %> 

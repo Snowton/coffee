@@ -91,13 +91,13 @@ nav a:hover {
     width: 40%;
 }
 
-.website a {
+.website a, .website .homeform button {
     text-decoration: none;
     color: #151515;
     font-weight: bold;
 }
 
-.website a:hover {
+.website a:hover, .website .homeform button:hover {
     color: #966c3b;
 }
 

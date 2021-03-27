@@ -1,10 +1,26 @@
-.compose form > div {
+.compose {
+    display: flex;
+}
+
+.compose > section {
+    width: 50%;
     padding: 20px;
+    display: flex;
+
+    /* align-self: center; */
+}
+
+.compose form {
+    width: 100%;
+}
+
+.compose form > div {
+    padding: 20px 0;
 }
 
 .compose input {
     width: 100%;
-    padding: 20px;
+    padding: 10px;
     font: inherit;
     border: none;
 }
@@ -13,7 +29,7 @@
     /* easy way to plop the elements on top of each other and have them both sized based on the tallest one's height */
     display: grid;
 }
-.compose .grow-wrap::after {
+.compose .helper {
     /* Note the weird space! Needed to preventy jumpy behavior */
     content: attr(data-replicated-value)" ";
 
@@ -32,9 +48,9 @@
     overflow: hidden;
 }
 .compose .grow-wrap > textarea,
-.compose .grow-wrap::after {
+.compose .helper{
     width: 100%;
-    padding: 20px 20px;
+    padding: 5px 5px;
     /* Identical styling required!! */
     border: none;
     font: inherit;
