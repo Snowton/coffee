@@ -141,9 +141,8 @@ app.get("/posts/:post", (req, res) => {
     Post.findOne({url: req.params.post}, (err, post) => {
         if(err || !post) res.redirect("/"); // 404
         else {
-            post.body = "<p>" + JSON.stringify(post.body).slice(1, -1) + "</p>"
-            post.body = (post.body.replace(/\\r\\n/g, "</p><p>"))
-            console.log(post.body)
+            // post.body = "<p> " + JSON.stringify(post.body).slice(1, -1) + " </p>"
+            post.body = ("<p>" + post.body.replace(/\r\n/g, " </p> <p> ") + "</p>")
             if(req.isAuthenticated()) {
                 User.findOne({id: req.user.id}, (err, user) => {
                     if(user) {
