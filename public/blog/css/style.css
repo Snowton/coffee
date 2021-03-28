@@ -108,6 +108,10 @@ nav a:hover {
     list-style-type: none;
 }
 
+.website .loginlinks {
+    text-align: center;
+}
+
 .website .card {
     border: solid 1px;
     border-radius: 5px;
