@@ -91,7 +91,7 @@ nav a:hover {
 }
 
 .website .tiny > div {
-    width: 40%;
+    width: 800px;
 }
 
 .website a, .website .homeform button {
@@ -113,6 +113,12 @@ nav a:hover {
     border-radius: 5px;
     padding: 15px;
     margin: 20px 0;
+}
+
+.website .blurb {
+    text-align: center;
+    width: 65%;
+    margin: 0 auto;
 }
 
 /* ************** FOOTER ***************** */
