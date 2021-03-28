@@ -137,7 +137,7 @@ const homeFind = (request, cb) => {
 const blogFind = (request, cb) => {
     const years = []
 
-    Post.find(request, {_id: 0, body: 0}, {sort: {date: 1}}, (err, posts) => {
+    Post.find(request, {_id: 0, body: 0}, {sort: {date: -1}}, (err, posts) => {
         if(posts) {
             for(post of posts) {
                 year = post.date.getYear() + 1900
