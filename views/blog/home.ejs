@@ -24,13 +24,13 @@
         <% posts.forEach(post => { %>
             <div class="card">
                 <h3>
-                    <%= post.title %> <% if(admin) { %><span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span>
+                    <%= post.title %> <% if(admin) { %><span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span>&nbsp;
                     <form action="/compose/<%= post.url %>" method="POST" class="homeform">
                         <% if(post.published) { %><button name="unpublish" value="true" type="submit"><i class="fas fa-angle-left"></i></button><% } else { %><button name="publish" value="true" type="submit"><i class="fas fa-angle-right"></i></button><% } %> 
                     </form>
                     <% } %>
                 </h3>
-                <p><%- post.body.split("<")[1].slice(2, 100) + (post.body.length > 100 ? "..." : "") %> <a href="/posts/<%= post.url %>"><%= post.body.length > 100 ? "Read more" : "Go to post" %> <i class="fas fa-arrow-circle-right"></i></a></p>
+                <p><%- post.body.split("<")[1].slice(2, 100) + (post.body.length > 100 ? "..." : "") %> <a href="/posts/<%= post.url %>"><%= post.body.length > 100 ? "Read more" : "Go to post" %>&nbsp;<i class="fas fa-arrow-circle-right"></i></a></p>
             </div>
         <% }); %>
     </div>
