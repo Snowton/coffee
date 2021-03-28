@@ -59,6 +59,8 @@
     /* Identical styling required!! */
     border: none;
     font: inherit;
+    word-wrap: break-word;
+    word-break: break-all;
 
     /* Place on top of each other */
     grid-area: 1 / 1 / 2 / 2;
