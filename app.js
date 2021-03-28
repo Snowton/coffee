@@ -134,7 +134,7 @@ const htmlify = (str) => {
 }
 
 const homeFind = (request, cb) => {
-    Post.find(request, {}, {limit: 10, sort: {date: -1}}, (err, posts) => {
+    Post.find(request, {}, {limit: 5, sort: {date: -1}}, (err, posts) => {
         cb(posts)
     })
 }
@@ -183,16 +183,28 @@ app.get("/", (req, res) => {
             if(user) {
                 request = {}
                 posts = homeFind(request, (posts) => {
+                    posts.map(post => {
+                        post.body = htmlify(post.body)
+                        return post
+                    })
                     res.render("blog/home.ejs", {posts: posts, admin: true, name: (req.user.name.givenName ? req.user.name.givenName : req.user.displayName)});
                 })
             } else {
                 posts = homeFind(request, (posts) => {
+                    posts.map(post => {
+                        post.body = htmlify(post.body)
+                        return post
+                    })
                     res.render("blog/home.ejs", {posts: posts, admin: false, name: (req.user.name.givenName ? req.user.name.givenName : req.user.displayName)});
                 })
             }
         })
     } else {
         posts = homeFind(request, (posts) => {
+            posts.map(post => {
+                post.body = htmlify(post.body)
+                return post
+            })
             res.render("blog/home.ejs", {posts: posts, admin: false, name: false});
         })
     }
