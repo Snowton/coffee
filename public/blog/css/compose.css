@@ -88,3 +88,7 @@
 .compose button:hover {
     box-shadow: 0 0 3px;
 }
+
+.compose section .preview {
+    width: 100;
+}
