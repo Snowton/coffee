@@ -1,4 +1,9 @@
 <%- include("partials/header") %> 
+<div class="headerimg">
+    <!-- <img src="/img/coffeebg.jpeg" alt=""> -->
+</div>
+
+<div class="website">
 
 <h1>Welcome<%= name ? ", " + name : "" %>!</h1>
 
@@ -24,13 +29,13 @@
         <% posts.forEach(post => { %>
             <div class="card">
                 <h3>
-                    <%= post.title %> <% if(admin) { %><span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span>&nbsp;
+                    <%= post.title %> <% if(admin) { %><span class="nowrap"><span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span>
                     <form action="/compose/<%= post.url %>" method="POST" class="homeform">
                         <% if(post.published) { %><button name="unpublish" value="true" type="submit"><i class="fas fa-angle-left"></i></button><% } else { %><button name="publish" value="true" type="submit"><i class="fas fa-angle-right"></i></button><% } %> 
-                    </form>
+                    </form></span>
                     <% } %>
                 </h3>
-                <p><%- post.body.split("<")[1].slice(2, 100) + (post.body.length > 100 ? "..." : "") %> <a href="/posts/<%= post.url %>"><%= post.body.length > 100 ? "Read more" : "Go to post" %>&nbsp;<i class="fas fa-arrow-circle-right"></i></a></p>
+                <p><%- post.body.split("<")[1].slice(2, 100) + (post.body.length > 100 ? "..." : "") %> <a href="/posts/<%= post.url %>" class="nowrap"><%= post.body.length > 100 ? "Read more" : "Go to post" %> <i class="fas fa-arrow-circle-right"></i></a></p>
             </div>
         <% }); %>
     </div>

@@ -262,10 +262,10 @@ app.get("/blog", (req, res) => {
 // DO NOT input titles that are a previous title + "-[integer number]"
 const getUrl = (title, change=false, cb) => {
     let url = title.toLowerCase().replace(/\s/g, "-")
+    let newUrl = url;
     Post.find({title: title}, {url: 1}, {sort: {url: 1}}, (err, posts) => {
         if(posts) {
             let count = 0;
-            console.log(posts)
 
             newUrl = url + (posts.length > 0 ? "-" + (posts.length + 1) : "")
 
@@ -279,12 +279,9 @@ const getUrl = (title, change=false, cb) => {
                     newUrl = url + (count > 0 ? "-" + count : "");
                     break;
                 }
-                console.log(count)
                 count++;
             }
         }
-
-        console.log(newUrl)
         cb(newUrl);
     })
 }
@@ -395,8 +392,9 @@ app.route("/compose/:post").get((req, res) => {
 
                     getUrl(req.body.title, req.params.post, (url) => {
                         request.url = url
+                        console.log(request)
 
-                        updateAndRedirect(url, request, redirect, res)
+                        updateAndRedirect(req.params.post, request, redirect, res)
                     })
                 } else {
                     updateAndRedirect(req.params.post, request, redirect, res)
