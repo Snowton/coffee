@@ -5,14 +5,14 @@
 
 <section class="tiny">
     <div class="blog">
-        <% for (year in years) { %> 
-            <h2><%= year %></h2>
+        <% for (year of years) { %> 
+            <h2><%= year.year %></h2>
             <ul>
             <li>
-            <% for (month in years[year]) { %>
-                <h3><%= month %></h3>
+            <% for (month of year.months) { %>
+                <h3><%= month.month %></h3>
                 <ul>
-                <% for (post of years[year][month]) { %>
+                <% for (post of month.posts) { %>
                     <li><% if(admin) { %><span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span>
                         <form action="/compose/<%= post.url %>" method="POST" class="homeform">
                             <% if(post.published) { %><button name="unpublish" value="true" type="submit"><i class="fas fa-angle-left"></i></button><% } else { %><button name="publish" value="true" type="submit"><i class="fas fa-angle-right"></i></button><% } %> 

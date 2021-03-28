@@ -135,24 +135,33 @@ const homeFind = (request, cb) => {
 }
 
 const blogFind = (request, cb) => {
-    const years = {}
+    const years = []
 
     Post.find(request, {_id: 0, body: 0}, {sort: {date: 1}}, (err, posts) => {
         if(posts) {
             for(post of posts) {
                 year = post.date.getYear() + 1900
-                if(!years[year]) {
-                    years[year] = {};
+
+                if(years.length === 0 || years[years.length - 1].year != year) {
+                    years[years.length] = {year: year, months: []}
+                    currentYear = year
                 }
 
-                months = years[year]
+                // if(!years[year]) {
+                //     years[year] = {};
+                // }
+
+                console.log(years);
+
+                months = years[years.length - 1].months
                 month = post.date.toLocaleString('default', { month: 'long' })
 
-                if(!months[month]) {
-                    months[month] = []
+
+                if(months.length === 0 || months[months.length - 1].month != month) {
+                    months[months.length] = {month: month, posts: []}
                 }
 
-                months[month] = [...months[month], post]
+                months[months.length - 1].posts = [...months[months.length - 1].posts, post]
             }
 
             cb(years);
