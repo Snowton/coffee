@@ -8,6 +8,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;  
 const session = require('express-session');
 const _ = require("lodash")
+const MongoStore = require('connect-mongo');
 
 // ***** my stuff
 const pastMeets = require("./cjlh_materials/past_meets.js")
@@ -61,7 +62,11 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'default_session_secret',
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO || "mongodb://localhost:27017/coffeeDB"
+    })
 }));
+
 app.use(passport.initialize());  
 app.use(passport.session());
 
