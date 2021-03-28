@@ -6,6 +6,7 @@
     font: inherit;
     background-color: none;
     border: none;
+    cursor: pointer;
 }
 
 .website .blog, .website .post {
