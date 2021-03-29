@@ -131,8 +131,21 @@ nav a:hover {
 
 .headerimg {
     width: 100%;
-    height: 50vh;
-    background: url(/img/coffeebg.jpeg) no-repeat center center fixed;
+    height: 60vh;
+}
+
+.headerimg.home {
+    background: url(/img/coffeebg3.png) no-repeat center center fixed;
+    background-size: cover;
+}
+
+.headerimg.posts {
+    background: url(/img/coffeebg2.png) no-repeat center center fixed;
+    background-size: cover;
+}
+
+.headerimg.post {
+    background: url(/img/coffeebg1) no-repeat center center fixed;
     background-size: cover;
 }
 
