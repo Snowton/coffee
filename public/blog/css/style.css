@@ -140,13 +140,13 @@ nav a:hover {
 }
 
 .headerimg.posts {
-    background: url(/img/coffeebg2.png) no-repeat center center fixed;
+    background: url(/img/coffeebg1.png) no-repeat center center fixed;
     background-size: cover;
 }
 
 .headerimg.post {
-    background: url(/img/coffeebg1) no-repeat center center fixed;
-    background-size: cover;
+    height: 70px;
+    background-color: white;
 }
 
 /* ************** FOOTER ***************** */

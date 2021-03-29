@@ -31,6 +31,7 @@ const postSchema = new mongoose.Schema({
     url: String,
     date: Date,
     published: Boolean,
+    img: String
 });
 
 const userSchema = new mongoose.Schema({
@@ -315,6 +316,7 @@ app.route("/compose").get((req, res) => {
     if(req.isAuthenticated()) {
         User.findOne({id: req.user.id}, (err, user) => {
             if(user) {
+                req.body.title = req.body.title.replace(/\?/g, "").replace(/\:/g, "")
                 getUrl(req.body.title, null, (url) => {
                     let now = Date.now();
 
@@ -331,7 +333,8 @@ app.route("/compose").get((req, res) => {
                         body: req.body.message,
                         url: url,
                         date: now,
-                        published: published
+                        published: published,
+                        img: req.body.img
                     })
 
                     post.save(err => {
@@ -387,8 +390,10 @@ app.route("/compose/:post").get((req, res) => {
                 }
 
                 if(req.body.title) {
+                    req.body.title = req.body.title.replace(/\?/g, "").replace(/\:/g, "")
                     request.title = req.body.title
                     request.body = req.body.message
+                    request.img = req.body.img
 
                     getUrl(req.body.title, req.params.post, (url) => {
                         request.url = url
