@@ -24,7 +24,7 @@
                     <label for="message">Post</label>
                     <div class="grow-wrap">
                         <textarea name="message" onInput="this.parentNode.dataset.replicatedValue = this.value" placeholder="Start typing here"><%= post.body ? post.body : "" %></textarea>
-                        <div class="helper" onInput="this.value = this.parentNode.dataset.replicatedValue"><%= post.body ? post.body : "" %></div> 
+                        <div class="helper" onInput="this.value = this.parentNode.dataset.replicatedValue"><%= post.body ? post.body.replace(/\\/g, "\\\\") : "" %></div> 
                     </div>
                     
                 </div>
