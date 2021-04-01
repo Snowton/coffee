@@ -119,6 +119,16 @@ nav a:hover {
     margin: 20px 0;
 }
 
+.website .snippet {
+    margin: 20px 0;
+}
+
+.website .snippet h1, .website .snippet h2,.website .snippet h3, .website .snippet h4, .website .snippet h5, .website .snippet h6 {
+    display: inline;
+    font-family: 'Noto Serif', sans-serif;
+    font-weight: bold;
+}
+
 .website .blurb {
     text-align: center;
     width: 65%;

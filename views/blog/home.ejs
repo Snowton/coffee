@@ -35,7 +35,7 @@
                     </form></span>
                     <% } %>
                 </h3>
-                <p><%- post.body %> <a href="/posts/<%= post.url %>" class="nowrap"><%= post.body.length > 100 ? "Read more" : "Go to post" %> <i class="fas fa-arrow-circle-right"></i></a></p>
+                <div class="snippet"><%- post.body %> <a href="/posts/<%= post.url %>" class="nowrap"><%= post.body.length > 100 ? "Read more" : "Go to post" %> <i class="fas fa-arrow-circle-right"></i></a></div>
             </div>
         <% }); %>
     </div>
