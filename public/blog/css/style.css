@@ -127,6 +127,7 @@ nav a:hover {
     display: inline;
     font-family: 'Noto Serif', sans-serif;
     font-weight: bold;
+    font-size: inherit;
 }
 
 .website .blurb {
