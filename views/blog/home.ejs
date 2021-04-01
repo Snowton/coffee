@@ -35,7 +35,7 @@
                     </form></span>
                     <% } %>
                 </h3>
-                <p><%- post.body.split("<")[1].slice(2, 100) + (post.body.length > 100 ? "..." : "") %> <a href="/posts/<%= post.url %>" class="nowrap"><%= post.body.length > 100 ? "Read more" : "Go to post" %> <i class="fas fa-arrow-circle-right"></i></a></p>
+                <p><%- post.body %> <a href="/posts/<%= post.url %>" class="nowrap"><%= post.body.length > 100 ? "Read more" : "Go to post" %> <i class="fas fa-arrow-circle-right"></i></a></p>
             </div>
         <% }); %>
     </div>

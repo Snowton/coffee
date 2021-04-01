@@ -134,6 +134,13 @@ const htmlify = (str) => {
     return ("<p>" + str.replace(/\r\n/g, " </p> <p> ") + "</p>");
 }
 
+const homeStr = (str) => {
+    // str = htmlify(str)
+    str = str.split("<img")[0].slice(0, 100) + (str.length > 100 ? "..." : "")
+
+    return str
+}
+
 const homeFind = (request, cb) => {
     Post.find(request, {}, {limit: 5, sort: {date: -1}}, (err, posts) => {
         cb(posts)
@@ -185,7 +192,7 @@ app.get("/", (req, res) => {
                 request = {}
                 posts = homeFind(request, (posts) => {
                     posts.map(post => {
-                        post.body = htmlify(post.body)
+                        post.body = homeStr(post.body)
                         return post
                     })
                     res.render("blog/home.ejs", {posts: posts, admin: true, name: (req.user.name.givenName ? req.user.name.givenName : req.user.displayName)});
@@ -193,7 +200,7 @@ app.get("/", (req, res) => {
             } else {
                 posts = homeFind(request, (posts) => {
                     posts.map(post => {
-                        post.body = htmlify(post.body)
+                        post.body = homeStr(post.body)
                         return post
                     })
                     res.render("blog/home.ejs", {posts: posts, admin: false, name: (req.user.name.givenName ? req.user.name.givenName : req.user.displayName)});
@@ -203,7 +210,7 @@ app.get("/", (req, res) => {
     } else {
         posts = homeFind(request, (posts) => {
             posts.map(post => {
-                post.body = htmlify(post.body)
+                post.body = homeStr(post.body)
                 return post
             })
             res.render("blog/home.ejs", {posts: posts, admin: false, name: false});
