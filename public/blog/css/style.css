@@ -39,7 +39,6 @@ nav h1 {
     margin: 0;
     text-align: center;
     justify-self: flex-start;
-    /* padding: 20px; */
 }
 
 nav ul {
@@ -98,11 +97,6 @@ nav a:hover {
 .website h1 {
     text-align: center;
     font-size: 4rem;
-}
-
-.website .tiny {
-    /* display: flex;
-    justify-content: center; */
 }
 
 .website .tiny > div {
@@ -177,7 +171,8 @@ nav a:hover {
 }
 
 .MathJax {
-    overflow: scroll;
+    overflow-x: auto;
+    overflow-y: hidden;
     max-width: 100%;
 }
 
@@ -192,12 +187,6 @@ footer {
 }
 
 /* ************** MEDIA QUERIES *************** */
-
-@media only screen and (max-width: 900px) {
-    /* .website .tiny {
-        width: 100%;
-    } */
-}
 
 @media only screen and (max-width: 700px) {
     .ham {
