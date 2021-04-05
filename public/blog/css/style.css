@@ -264,6 +264,16 @@ footer {
     }
 }
 
+@media only screen and (max-width: 500px) {
+    .website h1 {
+        font-size: 2rem;
+    }
+
+    .website h3 {
+        font-size: 1.5rem;
+    }
+}
+
 @media only screen and (max-width: 300px) {
     nav {
         font-size: 0.9rem;

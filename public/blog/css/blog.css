@@ -32,8 +32,15 @@
         font-size: 1rem;
     }
 
-    .website h2 {
+    .website .blog h2 {
         color: #666;
         font-size: 1.5rem;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .website .blog h2 {
+        color: #666;
+        font-size: 1.2rem;
     }
 }
