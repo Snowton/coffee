@@ -23,6 +23,7 @@ h2, h3, h4, h5, h6 {
 
 nav {
     display: flex;
+    flex-wrap: wrap;
     position: fixed;
     width: 100%;
     z-index: 10;
@@ -62,6 +63,20 @@ nav a {
 nav a:hover {
     color: #4e3620;
     /* background-color: #ebd5bd; */
+}
+
+.ham {
+    display: none;
+
+    justify-content: flex-end;
+    align-items: center;
+    cursor: pointer;
+
+    padding: 15px 15px 15px 0;
+}
+
+.ham p {
+    margin: 0;
 }
 
 /* *********** RIGHT AFTER NAV ************* */
@@ -168,4 +183,93 @@ footer {
     background-color: var(--background-hf);
     color: var(--hf-text);
     box-shadow: 0 -2px;
+}
+
+/* ************** MEDIA QUERIES *************** */
+
+@media only screen and (max-width: 700px) {
+    .ham {
+        display: flex;
+        margin-left: auto;
+    }
+
+    nav {
+        font-size: 1rem;
+    }
+
+    nav ul a {
+        color: white;
+        display: block;
+        padding: 15px;
+    }
+
+    nav a {
+        padding: 0;
+    }
+
+    nav h1 {
+        padding: 15px 0 15px 15px;
+    }
+
+    nav ul a {
+        padding: 15px;
+    }
+
+    nav ul {
+        display: block;
+        width: 100%;
+        margin: 0;
+        
+        text-align: right;
+        /* letter-spacing: 10px; */
+        padding: 0;
+
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+        background-color: #966c3b;
+        box-shadow: 0 2px 5px #151515;
+    }
+
+    .website {
+        padding: 10px;
+        font-size: 1rem;
+    }
+
+    .website h1, .website h2, .website h3, .website h4, .website h5, .website h6 {
+        margin: 15px 0;
+        font-size: 1rem;
+    }
+
+    .website h1 {
+        font-size: 3rem;
+    }
+
+    .website h3 {
+        font-size: 1.75rem;
+    }
+
+    .website .blog ul {
+        padding-left: 10px;
+    }
+
+    .website .card {
+        padding: 0 15px;
+        /* margin: 20px 0; */
+    }
+
+    footer {
+        padding: 15px;
+        font-size: 0.9rem;
+    }
+}
+
+@media only screen and (max-width: 300px) {
+    nav {
+        font-size: 0.9rem;
+    }
+
+    /* .website {
+        font-size: 0.8rem;
+    } */
 }
