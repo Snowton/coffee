@@ -106,7 +106,7 @@ nav a:hover {
 }
 
 .website .tiny > div {
-    width: 800px;
+    max-width: 800px;
 }
 
 .website a, .website .homeform button {
@@ -175,9 +175,9 @@ nav a:hover {
     background-color: white;
 }
 
-.MathJax_Display, .MJXc-display, .MathJax_SVG_Display {
-    overflow-x: auto;
-    overflow-y: hidden;
+.MathJax {
+    overflow: hidden;
+    max-width: 100%;
 }
 
 /* ************** FOOTER ***************** */
@@ -191,6 +191,12 @@ footer {
 }
 
 /* ************** MEDIA QUERIES *************** */
+
+@media only screen and (max-width: 900px) {
+    /* .website .tiny {
+        width: 100%;
+    } */
+}
 
 @media only screen and (max-width: 700px) {
     .ham {
