@@ -34,6 +34,7 @@ a:hover {
 
 nav {
     display: flex;
+    flex-wrap: wrap;
     position: fixed;
     width: 100%;
     z-index: 10;
@@ -62,6 +63,20 @@ nav a {
     align-items: center;
 }
 
+.ham {
+    display: none;
+
+    justify-content: flex-end;
+    align-items: center;
+    cursor: pointer;
+
+    padding: 15px 15px 15px 0;
+}
+
+.ham p {
+    margin: 0;
+}
+
 /* *********** RIGHT AFTER NAV ************* */
 
 .spacing {
@@ -72,6 +87,7 @@ nav a {
 
 .website {
     margin: 40px;
+    word-wrap: break-word;
 }
 
 /* ************** FOOTER ***************** */
@@ -79,4 +95,87 @@ nav a {
 footer {
     padding: 40px;
     text-align: center;
+}
+
+/* **************** MEDIA QUERIES **************** */
+
+@media only screen and (max-width: 1200px) {
+    nav ul a {
+        padding: 10px;
+    }
+
+    nav h1 {
+        font-size: 1.6rem;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    .ham {
+        display: flex;
+        margin-left: auto;
+    }
+
+    nav ul {
+        width: 100%;
+        display: block;
+
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+        background-color: #eee;
+        text-align: right;
+        margin: 0;
+        padding: 0 15px 5px 15px;
+    }
+
+    nav a {
+        display: block;
+    }
+
+    nav h1 {
+        font-size: 1.75rem;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    nav h1 {
+        font-size: 1.5rem;
+    }
+
+    .website {
+        margin: 10px;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    nav h1 {
+        font-size: 1.3rem;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    nav h1 {
+        font-size: 1rem;
+    }
+
+    nav .ham {
+        font-size: 0.8rem;
+    }
+}
+
+@media only screen and (max-width: 350px) {
+    nav a {
+        padding-left: 10px;
+        padding-right: 0;
+    }
+
+    nav .ham {
+        padding-right: 10px;
+    }
+}
+
+@media only screen and (max-width: 350px) {
+    nav h1 {
+        display: none;
+    }
 }
