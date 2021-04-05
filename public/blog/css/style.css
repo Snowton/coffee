@@ -101,12 +101,13 @@ nav a:hover {
 }
 
 .website .tiny {
-    display: flex;
-    justify-content: center;
+    /* display: flex;
+    justify-content: center; */
 }
 
 .website .tiny > div {
     max-width: 800px;
+    margin: auto;
 }
 
 .website a, .website .homeform button {
@@ -176,7 +177,7 @@ nav a:hover {
 }
 
 .MathJax {
-    overflow: hidden;
+    overflow: scroll;
     max-width: 100%;
 }
 
