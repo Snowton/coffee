@@ -431,12 +431,24 @@ app.route("/compose/:post").get((req, res) => {
 
 // ******* CJLH stuffs
 
+// THINGS TO CHANGE EACH MEET
+/*
+
+* nav bar (title only)
+* const currentmeet
+* add agenda file with same name as currentmeet
+* add past meet to past_meets.js
+
+*/
+
 const cjlhroot = "/cjlh/"
+
+const currentMeet = "phiday"
 
 // lots of static pages to be served up
 
 app.get(cjlhroot, (req, res) => {
-    res.render("cjlh/index.ejs", {pastMeets: pastMeets, about: about, url: root + req.headers.host + cjlhroot});
+    res.render("cjlh/index.ejs", {url: root + req.headers.host + cjlhroot});
 })
 
 app.get(cjlhroot + "meet", (req, res) => {
@@ -449,6 +461,23 @@ app.get(cjlhroot + "past-meets", (req, res) => {
 
 app.get(cjlhroot + "about", (req, res) => {
     res.render("cjlh/about.ejs", {about: about, sponsors: sponsors, url: root + req.headers.host + cjlhroot})
+})
+
+app.get(cjlhroot + "agenda", (req, res) => {
+    res.redirect(cjlhroot + "agendas/" + currentMeet);
+})
+
+app.get(cjlhroot + "agendas/:meet", (req, res) => {
+    console.log('hii')
+    res.render("cjlh/agendas/" + req.params.meet + ".ejs", {url: root + req.headers.host + cjlhroot}, (err, result) => {
+        if(err) {
+            res.render("cjlh/404.ejs")
+            console.log(err)
+        } else {
+            res.send(result)
+        }
+        console.log(err, result)
+    })
 })
 
 app.get(cjlhroot + "*", (req, res) => {
