@@ -221,7 +221,7 @@ app.get("/", (req, res) => {
 
 app.get("/posts/:post", (req, res) => {
     Post.findOne({url: req.params.post}, (err, post) => {
-        if(err || !post) res.redirect("/"); // 404
+        if(err || !post) res.render("blog/404.ejs", {route: req.params[0]}) // 404
         else {
             // post.body = "<p> " + JSON.stringify(post.body).slice(1, -1) + " </p>"
             post.body = htmlify(post.body)
@@ -316,7 +316,7 @@ app.route("/compose").get((req, res) => {
             } else res.redirect("/");
         })
     } else {
-        res.render("blog/404.ejs")
+        res.render("blog/404.ejs", {route: req.params[0]}) // 404
     }
 }).post((req, res) => {
     console.log(req.body);
@@ -356,10 +356,10 @@ app.route("/compose").get((req, res) => {
                         }
                     })
                 })
-            } else res.render("blog/404.ejs") // 404
+            } else res.render("blog/404.ejs", {route: req.params[0]}) // 404
         })
     } else {
-        res.render("blog/404.ejs") // 404
+        res.render("blog/404.ejs", {route: req.params[0]}) // 404
     }
 })
 
@@ -376,10 +376,10 @@ app.route("/compose/:post").get((req, res) => {
                         res.render("blog/404.ejs") // 404
                     }
                 });
-            } else res.render("blog/404.ejs")// 404
+            } else res.render("blog/404.ejs", {route: req.params[0]})// 404
         })
     } else {
-        res.render("blog/404.ejs") // 404
+        res.render("blog/404.ejs", {route: req.params[0]}) // 404
     }
 }).post((req, res) => {
     if(req.isAuthenticated()) {
@@ -412,10 +412,10 @@ app.route("/compose/:post").get((req, res) => {
                     updateAndRedirect(req.params.post, request, redirect, res)
                 }
 
-            } else res.render("blog/404.ejs")// 404
+            } else res.render("blog/404.ejs", {route: req.params[0]})// 404
         })
     } else {
-        res.render("blog/404.ejs") // 404
+        res.render("blog/404.ejs", {route: req.params[0]}) // 404
     }
 })
 
@@ -490,7 +490,7 @@ app.get(cjlhroot + "*", (req, res) => {
 // ************* CATCH-ALL 404
 
 app.get("*", (req, res) => {
-    res.render("blog/404.ejs", {route: req.params[0]})
+    res.render("blog/404.ejs", {route: req.params[0]}) // 404
 })
 
 app.listen(process.env.PORT || 3000, (err) => {
