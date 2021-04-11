@@ -27,6 +27,16 @@
     font-weight: normal;
 }
 
+/* CLASSES FOR POSTS */
+
+.center {
+    text-align: center;
+}
+
+
+
+/* ******** MEDIA QUERIES ********* */
+
 @media only screen and (max-width: 700px) {
     .website .blog, .website .post {
         font-size: 1rem;

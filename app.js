@@ -316,7 +316,7 @@ app.route("/compose").get((req, res) => {
             } else res.redirect("/");
         })
     } else {
-        res.redirect("/");
+        res.render("blog/404.ejs")
     }
 }).post((req, res) => {
     console.log(req.body);
@@ -356,10 +356,10 @@ app.route("/compose").get((req, res) => {
                         }
                     })
                 })
-            } else res.redirect("/"); // 404
+            } else res.render("blog/404.ejs") // 404
         })
     } else {
-        res.redirect("/"); // 404
+        res.render("blog/404.ejs") // 404
     }
 })
 
@@ -373,13 +373,13 @@ app.route("/compose/:post").get((req, res) => {
                     if(!err) {
                         res.render("blog/compose.ejs", {post: post, html: html})
                     } else {
-                        res.redirect("/"); // 404
+                        res.render("blog/404.ejs") // 404
                     }
                 });
-            } else res.redirect("/"); // 404
+            } else res.render("blog/404.ejs")// 404
         })
     } else {
-        res.redirect("/"); // 404
+        res.render("blog/404.ejs") // 404
     }
 }).post((req, res) => {
     if(req.isAuthenticated()) {
@@ -412,10 +412,10 @@ app.route("/compose/:post").get((req, res) => {
                     updateAndRedirect(req.params.post, request, redirect, res)
                 }
 
-            } else res.redirect("/"); // 404
+            } else res.render("blog/404.ejs")// 404
         })
     } else {
-        res.redirect("/"); // 404
+        res.render("blog/404.ejs") // 404
     }
 })
 
@@ -476,12 +476,21 @@ app.get(cjlhroot + "agendas/:meet", (req, res) => {
         } else {
             res.send(result)
         }
-        console.log(err, result)
+        // console.log(err, result)
     })
 })
 
 app.get(cjlhroot + "*", (req, res) => {
     res.render("cjlh/404.ejs")
+})
+
+
+
+
+// ************* CATCH-ALL 404
+
+app.get("*", (req, res) => {
+    res.render("blog/404.ejs", {route: req.params[0]})
 })
 
 app.listen(process.env.PORT || 3000, (err) => {

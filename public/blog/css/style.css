@@ -10,6 +10,7 @@ html, body {
 
 nav, footer, .website h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', sans-serif;
+    /* also used in route in 404 */
 }
 
 h2, h3, h4, h5, h6 {
@@ -104,6 +105,8 @@ nav a:hover {
     margin: auto;
 }
 
+/* ************* BUTTON ************ */
+
 .website a, .website .homeform button {
     text-decoration: none;
     color: #151515;
@@ -114,9 +117,13 @@ nav a:hover {
     color: #966c3b;
 }
 
+/* ************ UNORDERED LISTS ********* */
+
 .website ul {
     list-style-type: none;
 }
+
+/* ********* HOME PAGE **************** */
 
 .website .loginlinks {
     text-align: center;
@@ -150,6 +157,8 @@ nav a:hover {
     white-space: nowrap;
 }
 
+/* ************** HEADER IMAGE ************* */
+
 .headerimg {
     width: 100%;
     height: 60vh;
@@ -171,10 +180,28 @@ nav a:hover {
     background-color: white;
 }
 
+.headerimg.fof {
+    background: url(/img/404.jpeg) no-repeat bottom right fixed;
+    background-size: cover;
+}
+
+/* *********** GET LATEX TO SCROLL ************** */
+
 .MathJax {
     overflow-x: auto;
     overflow-y: hidden;
     max-width: 100%;
+}
+
+/* **************** 404 ********** */
+
+.fourohfour {
+    text-align: center;
+}
+
+.route {
+    font-family: 'Montserrat', sans-serif;
+    /* font-size: 1.5rem; */
 }
 
 /* ************** FOOTER ***************** */
