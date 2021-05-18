@@ -4,10 +4,11 @@ const express = require("express");
 // const bodyParser = require("body-parser") // apparently we don't need body parser anymore!
 const ejs = require("ejs");
 const mongoose = require("mongoose");
+
+// auth stuff
 const passport = require('passport');  
 const GoogleStrategy = require('passport-google-oauth20').Strategy;  
 const session = require('express-session');
-const _ = require("lodash")
 const MongoStore = require('connect-mongo');
 
 // ***** my stuff
