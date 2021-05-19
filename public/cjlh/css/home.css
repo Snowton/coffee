@@ -6,3 +6,17 @@
 .label {
     font-style: italic;
 }
+
+.flyer {
+    text-align: center;
+}
+
+.flyer img {
+    max-width: 800px;
+}
+
+@media only screen and (max-width: 870px) {
+    .flyer img {
+        max-width: 100%;
+    }
+}
