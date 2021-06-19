@@ -7,6 +7,10 @@ const sponsors = [
         name: "Art of Problem Solving",
         img: "aops.png"
     },
+    {
+        name: "Maplesoft",
+        img: "maplesoft.png"
+    },
 ]
 
 module.exports = sponsors;
