@@ -1,5 +1,15 @@
 const pastMeets = [
     {
+        name: "Phi Day Math Meet",
+        date: "June 19, 2021",
+        data: {
+            agenda: "/cjlh/agendas/phiday",
+            problems: "https://drive.google.com/drive/u/0/folders/1xtDRgyI1tZnUr_wEQ81cMdWGs9Iwf1z3",
+            presentation: "https://docs.google.com/presentation/d/1b7Iiw_TWhJ0OkWql6hPNz05oXPmHWmwr5UcFANKWelg/edit?usp=sharing",
+            leaderboard: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-Ijjcz6Cpp5RnTxD_KC9ngCgmPP68xyDRIzg97B2Mry8to4dSlL8Z8UWXtAJItvMkvQQ0QLSwfHw3/pubhtml?gid=0&single=true"
+        }
+    },
+    {
         name: "April Fool's Day Math Meet",
         date: "April 3, 2021",
         data: {
