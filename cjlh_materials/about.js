@@ -11,11 +11,11 @@ const us = [
     + "</p><p>"
     + "Aside from volunteering, Amy loves to read exciting books in her free time, and enjoys (occasionally) annoying her friends."
     + "</p>",
-    "<p><strong>Priya Alapati</strong> is a senior at WW-P High School North. She has been interested in analytical problem solving since a young age, participating in math competitions since first grade. She became a part of the Accelerated and Enriched math program at West Windsor Plainsboro Regional School District in seventh grade, then proceeded to complete up to AP Calculus BC in her junior year, and is currently taking AP Statistics in her senior year. 
+    "<p><strong>Priya Alapati</strong> is a senior at WW-P High School North. She has been interested in analytical problem solving since a young age, participating in math competitions since first grade. She became a part of the Accelerated and Enriched math program at West Windsor Plainsboro Regional School District in seventh grade, then proceeded to complete up to AP Calculus BC in her junior year, and is currently taking AP Statistics in her senior year." 
     + "</p><p>" 
-    + "Priya is also interested in computer science, taking computer programming classes in high school to better her understanding of programming. The summer before freshmen year, she took two online CTY Java courses: Introduction to Java and Advanced Java Programming. During her sophomore year, Priya also took AP Computer Science A and scored a 5 on the AP exam. She is currently enrolled in AP Computer Science Principles during her senior year.
+    + "Priya is also interested in computer science, taking computer programming classes in high school to better her understanding of programming. The summer before freshmen year, she took two online CTY Java courses: Introduction to Java and Advanced Java Programming. During her sophomore year, Priya also took AP Computer Science A and scored a 5 on the AP exam. She is currently enrolled in AP Computer Science Principles during her senior year."
     + "</p><p>"
-    + "During Priya's free time, she enjoys being a part of her school's Track and Field teams in both the winter and spring. She particularly loves to pole vault and sprint. She also is a student of both Bharatanatyam and Carnatic music, and has achieved a diploma in Bharatanatyam. She also spends her free time volunteering in local hospitals, excited to learn more about the healthcare field.
+    + "During Priya's free time, she enjoys being a part of her school's Track and Field teams in both the winter and spring. She particularly loves to pole vault and sprint. She also is a student of both Bharatanatyam and Carnatic music, and has achieved a diploma in Bharatanatyam. She also spends her free time volunteering in local hospitals, excited to learn more about the healthcare field."
     + "</p><p>"
     + "One of Priya's favorite hobbies is reading, and she is always thrilled to find a new book."
     + "</p>"
