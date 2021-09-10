@@ -17,7 +17,8 @@ const us = [
     + "</p><p>"
     + "During Priya's free time, she enjoys being a part of her school's Track and Field teams in both the winter and spring. She particularly loves to pole vault and sprint. She also is a student of both Bharatanatyam and Carnatic music, and has achieved a diploma in Bharatanatyam. She also spends her free time volunteering in local hospitals, excited to learn more about the healthcare field.
     + "</p><p>"
-    + "One of Priya's favorite hobbies is reading, and she is always thrilled to find a new book.</p>"
+    + "One of Priya's favorite hobbies is reading, and she is always thrilled to find a new book."
+    + "</p>"
 ]
 
 module.exports = us;
