@@ -328,6 +328,42 @@ const generateRequest = (body, files, user, oldUrl, next) => {
             pin: Math.max(0, body.pin),
             ids: [{_id: user._id, id: user.id, email: user.emails[0].value}]
         }]
+
+        if(body.imageDelete) {
+            request.push(({}))
+            // let del = []
+            if(typeof(body.imageDelete) === "string") {
+                fs.unlinkSync("public/img/blog/multer/" + body.imageDelete, (err) => {
+                    if(err) console.log(err)
+                })
+            } else {
+                for (item of body.imageDelete) {
+                    fs.unlinkSync("public/img/blog/multer/" + item, (err) => {
+                        if(err) console.log(err)
+                    })
+                }
+            }
+            request[1]["$pull"] = {"files": {$in: body.imageDelete}}
+        }
+    
+        if(files) {
+            files = files.map(file => file.filename)
+            request[0]["$push"] = {"files": {$each: files}}
+        }
+
+        getUrl(body.title, oldUrl, (url) => {
+            request[0].url = url
+            body.ids=body.ids.split(",")
+            console.log(body.ids);
+            User.find({email: {$in: body.ids}}, (err, users) => {
+                if(users) {
+                    request[0]["ids"]=users
+                    request[0]["ids"].unshift({_id: user._id, id: user.id, email: user.emails[0].value})
+                }
+                next(redirect, request)
+            })
+            // console.log(redirect)
+        })
     }
 
     // for (item of files) {
@@ -338,27 +374,6 @@ const generateRequest = (body, files, user, oldUrl, next) => {
     // for (item of body.imageDelete) {
     //     request["$pullAll"][$]
     // }
-    if(body.imageDelete) {
-        request.push(({}))
-        // let del = []
-        if(typeof(body.imageDelete) === "string") {
-            fs.unlinkSync("public/img/blog/multer/" + body.imageDelete, (err) => {
-                if(err) console.log(err)
-            })
-        } else {
-            for (item of body.imageDelete) {
-                fs.unlinkSync("public/img/blog/multer/" + item, (err) => {
-                    if(err) console.log(err)
-                })
-            }
-        }
-        request[1]["$pull"] = {"files": {$in: body.imageDelete}}
-    }
-
-    if(files) {
-        files = files.map(file => file.filename)
-        request[0]["$push"] = {"files": {$each: files}}
-    }
 
     if(body.publish) {
         request[0].published = true
@@ -368,19 +383,7 @@ const generateRequest = (body, files, user, oldUrl, next) => {
         redirect = true
     }
 
-    getUrl(body.title, oldUrl, (url) => {
-        request[0].url = url
-        body.ids=body.ids.split(",")
-        console.log(body.ids);
-        User.find({email: {$in: body.ids}}, (err, users) => {
-            if(users) {
-                request[0]["ids"]=users
-                request[0]["ids"].unshift({_id: user._id, id: user.id, email: user.emails[0].value})
-            }
-            next(redirect, request)
-        })
-        // console.log(redirect)
-    })
+    next(redirect, request)
 }
 
 app.route("/compose").get(authStuff, (req, res) => {
