@@ -27,6 +27,7 @@
 .compose input {
     font: inherit;
     border: none;
+    margin: 5px 0;
 }
 
 .files-already-uploaded {
