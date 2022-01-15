@@ -31,6 +31,10 @@ const { redirect } = require("express/lib/response");
 
 mongoose.connect(process.env.MONGO || "mongodb://localhost:27017/coffeeDB", {useNewUrlParser: true, useUnifiedTopology: true });
 
+const userSchema = new mongoose.Schema({
+    id: String,
+    email: String
+})
 const postSchema = new mongoose.Schema({
     title: String,
     body: String,
@@ -38,13 +42,11 @@ const postSchema = new mongoose.Schema({
     date: Date,
     published: Boolean,
     img: String,
-    ids: [String],
-    files: [String]
+    ids: [userSchema],
+    files: [String],
+    pin: Number
 });
 
-const userSchema = new mongoose.Schema({
-    id: String
-})
 
 
 
@@ -97,7 +99,10 @@ passport.serializeUser((user, done) => {
 });
   
 passport.deserializeUser((userDataFromCookie, done) => {  
-    done(null, userDataFromCookie);
+    // let actual = User.findOneAndUpdate({id: userDataFromCookie.id}, {$set: {email: userDataFromCookie.emails[0].value}}, {useFindAndModify: false})
+    User.find({id: userDataFromCookie.id}, (err, actual) => {
+        done(null, actual ? {...userDataFromCookie, _id: actual._id} : userDataFromCookie);
+    }) 
 });
 
 // setting up google auth
@@ -123,7 +128,11 @@ app.get('/auth/google/callback',
     (req, res) => {
         console.log('wooo we authenticated, here is our user object:', req.user);
         // res.json(req.user); // idk why they had this
+        // User.findOneAndUpdate({id: req.user.id}, {$set: {email: req.user.emails[0].value}}, (err, user) => {
+        //     console.log(user);
         res.redirect('/');
+        // })
+        // console.log(req.user.emails[0].value);
     }
 );
 
@@ -180,7 +189,7 @@ const homeStr = (str) => {
 }
 
 const homeFind = (request, cb) => {
-    Post.find(request, {}, {limit: 5, sort: {date: -1}}, (err, posts) => {
+    Post.find(request, {}, {limit: 5, sort: {pin: 1, date: -1}}, (err, posts) => {
         cb(posts)
     })
 }
@@ -228,7 +237,7 @@ app.get("/", authStuff, (req, res) => {
             post.body = homeStr(post.body)
             return post
         })
-        res.render("blog/home.ejs", {posts: posts, admin: req.options.admin, name: req.options.name ? (req.user.name.givenName ? req.user.name.givenName : req.user.displayName) : false });
+        res.render("blog/home.ejs", {posts: posts, admin: req.options.admin, id: req.user ? req.user.id : null, name: req.options.name ? (req.user.name.givenName ? req.user.name.givenName : req.user.displayName) : false });
     })
 })
 
@@ -238,14 +247,14 @@ app.get("/posts/:post", authStuff, (req, res) => {
         else {
             // post.body = "<p> " + JSON.stringify(post.body).slice(1, -1) + " </p>"
             post.body = htmlify(post.body)
-            res.render("blog/post.ejs", {post: post, admin: req.options.admin});
+            res.render("blog/post.ejs", {post: post, admin: req.options.admin, id: req.user ? req.user.id : null});
         }
     })
 })
 
 app.get("/blog", authStuff, (req, res) => {
     blogFind(req.options.admin ? {} : {published: true}, (years) => {
-        res.render("blog/blog.ejs", {years: years, admin: req.options.admin});
+        res.render("blog/blog.ejs", {years: years, admin: req.options.admin, id: req.user ? req.user.id : null});
     })
 })
 
@@ -290,7 +299,6 @@ const updateAndRedirect = (url, request, redirect, res) => {
                 console.log(request[1]);
                 Post.updateOne({url: url}, request[1], (err, post) => {
                     if(!err) redirectPost(redirect, url, res)
-                    console.log(post, 'hi');
                 })
             }
             else redirectPost(redirect, url, res)
@@ -307,11 +315,13 @@ const redirectPost = (redirect, url, res) => {
     }
 }
 
-const generateRequest = (body, files, oldUrl, next) => {
+const generateRequest = (body, files, user, oldUrl, next) => {
     let request = [{
         title: body.title.replace(/\?/g, "").replace(/\:/g, ""),
         body: body.message,
         img: body.img,
+        pin: Math.max(0, body.pin),
+        ids: [{_id: user._id, id: user.id, email: user.emails[0].value}]
     }]
     let redirect = false
 
@@ -355,7 +365,16 @@ const generateRequest = (body, files, oldUrl, next) => {
 
     getUrl(body.title, oldUrl, (url) => {
         request[0].url = url
-        next(redirect, request)
+        body.ids=body.ids.split(",")
+        console.log(body.ids);
+        User.find({email: {$in: body.ids}}, (err, users) => {
+            if(users) {
+                request[0]["ids"]=users
+                request[0]["ids"].unshift({_id: user._id, id: user.id, email: user.emails[0].value})
+            }
+            next(redirect, request)
+        })
+        // console.log(redirect)
     })
 }
 
@@ -370,15 +389,15 @@ app.route("/compose").get(authStuff, (req, res) => {
     // console.log(req.body, req.file, "hi");
     if(req.options.admin) {
         let now = Date.now();
-        generateRequest(req.body, req.files, null, (redirect, request) => {
+        generateRequest(req.body, req.files, req.user, null, (redirect, request) => {
             request[0].date = now
-            request[0].ids = [req.user.id]
     
             const post = new Post(request[0])
+            // console.log(redirect)
     
             post.save(err => {
                 if(!err) {
-                    redirectPost(redirect, request[0].url)
+                    redirectPost(redirect, request[0].url, res)
                 }
             })
         })
@@ -388,21 +407,27 @@ app.route("/compose").get(authStuff, (req, res) => {
 app.route("/compose/:post").get(authStuff, (req, res) => {
     if(req.options.admin) {
         Post.findOne({url: req.params.post}, (err, post) => {
-            html = htmlify(post.body)
-            if(html === "") html = "[Compiled code will appear here.]"
-            if(!err) {
-                res.render("blog/compose.ejs", {post: post, html: html})
-            } else {
-                res.render("blog/404.ejs") // 404
-            }
+            if(post.ids.map(user => user.id).includes(req.user.id)) {
+                html = htmlify(post.body)
+                if(html === "") html = "[Compiled code will appear here.]"
+                if(!err) {
+                    res.render("blog/compose.ejs", {post: post, html: html})
+                } else {
+                    res.render("blog/404.ejs") // 404
+                }
+            } else res.render("blog/404.ejs", {route: req.params[0]})// 404
         });
     } else res.render("blog/404.ejs", {route: req.params[0]})// 404
 }).post(authStuff, upload.array('files'), (req, res) => {
     console.log(req.body);
     // console.log(req.options.admin);
     if(req.options.admin) {
-        generateRequest(req.body, req.files, req.params.post, (redirect, request) => {
-            updateAndRedirect(req.params.post, request, redirect, res)
+        Post.findOne({url: req.params.post}, (err, post) => {
+            if(post.ids.map(user => user.id).includes(req.user.id)) {
+                generateRequest(req.body, req.files, req.user, req.params.post, (redirect, request) => {
+                    updateAndRedirect(req.params.post, request, redirect, res)
+                })
+            } else res.render("blog/404.ejs", {route: req.params[0]})// 404
         })
     } else res.render("blog/404.ejs", {route: req.params[0]})// 404
 })

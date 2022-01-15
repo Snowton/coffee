@@ -20,7 +20,7 @@
     padding: 20px 0;
 }
 
-.compose input[type=text] {
+.compose input[type=text], input[type=number], input[type=email]{
     width: 100%;
 }
 
