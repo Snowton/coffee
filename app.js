@@ -325,6 +325,16 @@ const generateRequest = (body, files, user, oldUrl, next) => {
     }]
     let redirect = false
 
+    if(body.title) {
+        request = [{
+            title: body.title.replace(/\?/g, "").replace(/\:/g, ""),
+            body: body.message,
+            img: body.img,
+            pin: Math.max(0, body.pin),
+            ids: [{_id: user._id, id: user.id, email: user.emails[0].value}]
+        }]
+    }
+
     // for (item of files) {
     //     request["$push"]["files"]["$each"].push(item.filename)
     // }
