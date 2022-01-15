@@ -30,8 +30,13 @@
     margin: 5px 0;
 }
 
-.files-already-uploaded {
+.compose .files-already-uploaded {
     margin: 5px 0;
+}
+
+.compose .compose-files-hr {
+    width: 50%;
+    margin-right: 50%;
 }
 
 .compose .grow-wrap {

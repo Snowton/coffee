@@ -35,7 +35,9 @@
                             <% }} %>
                             <!-- </select> -->
                         </div>
+                        <hr class="compose-files-hr">
                     </div>
+                    <div class="small">Owner: <%= post.creator ? post.creator.email : "you :)" %></div>
                     <div><input type="number" name="pin" placeholder="Priority" value="<%= post.pin ? post.pin : "" %>"></div>
                     <div><input type="email" name="ids" value="<%= post.ids ? post.ids.length > 1 ? post.ids.slice(1).reduce((acc, user) => acc + ', ' + user.email, '').substring(1) : '' : ''%>" multiple placeholder="Collaborators (emails)"></div>
                 </div>
