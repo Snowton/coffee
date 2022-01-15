@@ -29,7 +29,7 @@
         <% posts.forEach(post => { %>
             <div class="card">
                 <h3>
-                    <%= post.title %> <% if(admin && post.ids.map(user => user.id).includes(id)) { %><span class="nowrap"><span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span>
+                    <%= post.title %><% if(post.pin > 0) { %> <i class="fas fa-thumbtack"></i><% } %> <% if(admin && post.ids.map(user => user.id).includes(id)) { %><span class="nowrap"><span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span>
                     <form action="/compose/<%= post.url %>" method="POST" class="homeform">
                         <% if(post.published) { %><button name="unpublish" value="true" type="submit"><i class="fas fa-angle-left"></i></button><% } else { %><button name="publish" value="true" type="submit"><i class="fas fa-angle-right"></i></button><% } %> 
                     </form></span>

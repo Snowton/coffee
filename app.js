@@ -189,7 +189,8 @@ const homeStr = (str) => {
 }
 
 const homeFind = (request, cb) => {
-    Post.find(request, {}, {limit: 5, sort: { date: -1}}, (err, posts) => {
+    Post.find(request, {}, {limit: 5, sort: {pin: -1, date: -1}}, (err, posts) => {
+        console.log(posts.map(post => ({title: post.title, pin: post.pin})));
         cb(posts)
     })
 }
