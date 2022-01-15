@@ -320,6 +320,14 @@ const generateRequest = (body, files, user, oldUrl, next) => {
     let request = [{}]
     let redirect = false
 
+    if(body.publish) {
+        request[0].published = true
+        redirect = true
+    } else if(body.unpublish) {
+        request[0].published = false
+        redirect = true
+    }
+
     // no title in posts page or home page !!
     if(body.title) {
         request = [{
@@ -365,7 +373,7 @@ const generateRequest = (body, files, user, oldUrl, next) => {
             })
             // console.log(redirect)
         })
-    }
+    } else next(redirect, request)
 
     // for (item of files) {
     //     request["$push"]["files"]["$each"].push(item.filename)
@@ -375,16 +383,6 @@ const generateRequest = (body, files, user, oldUrl, next) => {
     // for (item of body.imageDelete) {
     //     request["$pullAll"][$]
     // }
-
-    if(body.publish) {
-        request[0].published = true
-        redirect = true
-    } else if(body.unpublish) {
-        request[0].published = false
-        redirect = true
-    }
-
-    next(redirect, request)
 }
 
 app.route("/compose").get(authStuff, (req, res) => {
