@@ -189,7 +189,7 @@ const homeStr = (str) => {
 }
 
 const homeFind = (request, cb) => {
-    Post.find(request, {}, {limit: 5, sort: {pin: 1, date: -1}}, (err, posts) => {
+    Post.find(request, {}, {limit: 5, sort: { date: -1}}, (err, posts) => {
         cb(posts)
     })
 }
@@ -316,15 +316,10 @@ const redirectPost = (redirect, url, res) => {
 }
 
 const generateRequest = (body, files, user, oldUrl, next) => {
-    let request = [{
-        title: body.title.replace(/\?/g, "").replace(/\:/g, ""),
-        body: body.message,
-        img: body.img,
-        pin: Math.max(0, body.pin),
-        ids: [{_id: user._id, id: user.id, email: user.emails[0].value}]
-    }]
+    let request = [{}]
     let redirect = false
 
+    // no title in posts page or home page !!
     if(body.title) {
         request = [{
             title: body.title.replace(/\?/g, "").replace(/\:/g, ""),
