@@ -6,28 +6,37 @@
     width: 50%;
     padding: 20px;
     display: flex;
-
-    /* align-self: center; */
 }
 
-.compose form {
+.compose .form-main form {
+    display: none;
+}
+
+.compose .form-main {
     width: 100%;
 }
 
-.compose form > div {
+.compose .form-main > div {
     padding: 20px 0;
 }
 
-.compose input {
+.compose input[type=text] {
     width: 100%;
-    padding: 10px;
+}
+
+.compose input {
     font: inherit;
     border: none;
+}
+
+.files-already-uploaded {
+    margin: 5px 0;
 }
 
 .compose .grow-wrap {
     /* easy way to plop the elements on top of each other and have them both sized based on the tallest one's height */
     display: grid;
+    margin: 0;
 }
 
 /* .grow-wrap::after ===== .helper */
@@ -66,13 +75,9 @@
     grid-area: 1 / 1 / 2 / 2;
 }
 
-.compose label {
-    display: block;
-    display: none;
-}
-
 .compose .btn {
     text-align: center;
+    width: 100%;
 }
 
 .compose button {

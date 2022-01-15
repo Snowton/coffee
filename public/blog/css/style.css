@@ -95,6 +95,13 @@ nav a:hover {
     font-size: 1.25rem;
 }
 
+.small {
+    font-size: 1rem;
+}
+.small p {
+    margin: 1px 0;
+}
+
 .website h1 {
     text-align: center;
     font-size: 4rem;
@@ -263,6 +270,10 @@ footer {
     .website {
         padding: 10px;
         font-size: 1rem;
+    }
+
+    .small {
+        font-size: 0.7rem;
     }
 
     .website h1, .website h2, .website h3, .website h4, .website h5, .website h6 {

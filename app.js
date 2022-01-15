@@ -14,8 +14,13 @@ const MongoStore = require('connect-mongo');
 // ***** my stuff
 const pastMeets = require("./cjlh_materials/past_meets.js")
 const about = require("./cjlh_materials/about.js")
-const sponsors = require("./cjlh_materials/sponsors.js")
+const sponsors = require("./cjlh_materials/sponsors.js");
+const e = require("express");
 
+// files
+const multer = require('multer');
+const fs = require("fs");
+const { redirect } = require("express/lib/response");
 
 
 
@@ -32,12 +37,16 @@ const postSchema = new mongoose.Schema({
     url: String,
     date: Date,
     published: Boolean,
-    img: String
+    img: String,
+    ids: [String],
+    files: [String]
 });
 
 const userSchema = new mongoose.Schema({
     id: String
 })
+
+
 
 const Post = mongoose.model("post", postSchema);
 const User = mongoose.model("user", userSchema);
@@ -46,6 +55,17 @@ const User = mongoose.model("user", userSchema);
 
 const app = express()
 
+// const upload = multer({ dest: 'public/img/blog/multer' })
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'public/img/blog/multer')
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+      cb(null, file.originalname + '-' + uniqueSuffix)
+    }
+})
+const upload = multer({ storage: storage })
 app.set("view-engine", "ejs")
 app.use(express.urlencoded({extended: true}));
 app.use(express.static("public"))
@@ -61,7 +81,7 @@ const root = "https://"
 // setting up cookies
 
 app.use(session({  
-    secret: process.env.SESSION_SECRET || 'default_session_secret',
+    secret: process.env.SESSION_SECRET || 'not_default_session_secret',
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
@@ -125,7 +145,24 @@ app.get("/logout", (req, res) => {
 
 
 
+// Auth
 
+const authStuff = (req, res, next) => {
+    if(req.isAuthenticated()) {
+        User.findOne({id: req.user.id}, (err, user) => {
+            if(user) {
+                req.options = {admin: true, name: true};
+                next();
+            } else {
+                req.options = {admin: false, name: true};
+                next();
+            }
+        })
+    } else {
+        req.options = {admin: false, name: false};
+        next();
+    }
+}
 
 // **** BLOG stuffs
 
@@ -138,7 +175,7 @@ const htmlify = (str) => {
 const homeStr = (str) => {
     // str = htmlify(str)
     str = str.split("<img")[0].slice(0, 100) + (str.length > 100 ? "..." : "")
-
+    // length is used both here and in home.ejs
     return str
 }
 
@@ -185,80 +222,31 @@ const blogFind = (request, cb) => {
     })
 }
 
-app.get("/", (req, res) => {
-    let request = {published: true}
-    if(req.isAuthenticated()) {
-        User.findOne({id: req.user.id}, (err, user) => {
-            if(user) {
-                request = {}
-                posts = homeFind(request, (posts) => {
-                    posts.map(post => {
-                        post.body = homeStr(post.body)
-                        return post
-                    })
-                    res.render("blog/home.ejs", {posts: posts, admin: true, name: (req.user.name.givenName ? req.user.name.givenName : req.user.displayName)});
-                })
-            } else {
-                posts = homeFind(request, (posts) => {
-                    posts.map(post => {
-                        post.body = homeStr(post.body)
-                        return post
-                    })
-                    res.render("blog/home.ejs", {posts: posts, admin: false, name: (req.user.name.givenName ? req.user.name.givenName : req.user.displayName)});
-                })
-            }
+app.get("/", authStuff, (req, res) => {
+    homeFind(req.options.admin ? {} : {published: true}, (posts) => {
+        posts.map(post => {
+            post.body = homeStr(post.body)
+            return post
         })
-    } else {
-        posts = homeFind(request, (posts) => {
-            posts.map(post => {
-                post.body = homeStr(post.body)
-                return post
-            })
-            res.render("blog/home.ejs", {posts: posts, admin: false, name: false});
-        })
-    }
-    
+        res.render("blog/home.ejs", {posts: posts, admin: req.options.admin, name: req.options.name ? (req.user.name.givenName ? req.user.name.givenName : req.user.displayName) : false });
+    })
 })
 
-app.get("/posts/:post", (req, res) => {
+app.get("/posts/:post", authStuff, (req, res) => {
     Post.findOne({url: req.params.post}, (err, post) => {
         if(err || !post) res.render("blog/404.ejs", {route: req.params[0]}) // 404
         else {
             // post.body = "<p> " + JSON.stringify(post.body).slice(1, -1) + " </p>"
             post.body = htmlify(post.body)
-            if(req.isAuthenticated()) {
-                User.findOne({id: req.user.id}, (err, user) => {
-                    if(user) {
-                        res.render("blog/post.ejs", {post: post, admin: true})
-                    } else res.render("blog/post.ejs", {post: post, admin: false});
-                })
-            } else {
-                res.render("blog/post.ejs", {post: post, admin: false});
-            }
+            res.render("blog/post.ejs", {post: post, admin: req.options.admin});
         }
     })
 })
 
-app.get("/blog", (req, res) => {
-    let request = {published: true}
-    if(req.isAuthenticated()) {
-        User.findOne({id: req.user.id}, (err, user) => {
-            if(user) {
-                request = {}
-                blogFind(request, (years) => {
-                    res.render("blog/blog.ejs", {years: years, admin: true});
-                })
-            } else {
-                blogFind(request, (years) => {
-                    res.render("blog/blog.ejs", {years: years, admin: false});
-                })
-            }
-        })
-    } else {
-        blogFind(request, (years) => {
-            res.render("blog/blog.ejs", {years: years, admin: false});
-        })
-    }
+app.get("/blog", authStuff, (req, res) => {
+    blogFind(req.options.admin ? {} : {published: true}, (years) => {
+        res.render("blog/blog.ejs", {years: years, admin: req.options.admin});
+    })
 })
 
 
@@ -279,7 +267,7 @@ const getUrl = (title, change=false, cb) => {
             newUrl = url + (posts.length > 0 ? "-" + (posts.length + 1) : "")
 
             for(post of posts) {
-                console.log(url + (count > 0 ? "-" + count : ""), post.url)
+                // console.log(url + (count > 0 ? "-" + count : ""), post.url)
                 if(post.url === change) {
                     newUrl = change;
 
@@ -296,131 +284,138 @@ const getUrl = (title, change=false, cb) => {
 }
 
 const updateAndRedirect = (url, request, redirect, res) => {
-    Post.updateOne({url: url}, request, (err, post) => {
+    Post.updateOne({url: url}, request[0], (err) => {
         if(!err) {
-            if(redirect) {
-                res.redirect("/");
-            } else {
-                res.redirect("/compose/" + url)
+            if(request[1]) {
+                console.log(request[1]);
+                Post.updateOne({url: url}, request[1], (err, post) => {
+                    if(!err) redirectPost(redirect, url, res)
+                    console.log(post, 'hi');
+                })
             }
+            else redirectPost(redirect, url, res)
         }
         else console.log(err);
     });
 }
 
-app.route("/compose").get((req, res) => {
-    if(req.isAuthenticated()) {
-        User.findOne({id: req.user.id}, (err, user) => {
-            if(user) {
-                html = "[Compiled code will appear here.]"
-                res.render("blog/compose.ejs", {post: {}});
-            } else res.redirect("/");
-        })
+const redirectPost = (redirect, url, res) => {
+    if(redirect) {
+        res.redirect("/");
     } else {
-        res.render("blog/404.ejs", {route: req.params[0]}) // 404
+        res.redirect("/compose/" + url)
     }
-}).post((req, res) => {
-    console.log(req.body);
-    if(req.isAuthenticated()) {
-        User.findOne({id: req.user.id}, (err, user) => {
-            if(user) {
-                req.body.title = req.body.title.replace(/\?/g, "").replace(/\:/g, "")
-                getUrl(req.body.title, null, (url) => {
-                    let now = Date.now();
+}
 
-                    let published = false;
+const generateRequest = (body, files, oldUrl, next) => {
+    let request = [{
+        title: body.title.replace(/\?/g, "").replace(/\:/g, ""),
+        body: body.message,
+        img: body.img,
+    }]
+    let redirect = false
 
-                    if(req.body.publish) {
-                        published = true
-                    } else if(req.body.unpublished) {
-                        published = false
-                    }
+    // for (item of files) {
+    //     request["$push"]["files"]["$each"].push(item.filename)
+    // }
+    // console.log(files)
 
-                    const post = new Post({
-                        title: req.body.title,
-                        body: req.body.message,
-                        url: url,
-                        date: now,
-                        published: published,
-                        img: req.body.img
-                    })
-
-                    post.save(err => {
-                        if(!err) {
-                            if(req.body.publish) {
-                                res.redirect("/");
-                            } else if(req.body.save) {
-                                res.redirect("/compose/" + url)
-                            } else if(req.body.unpublish) {
-                                res.redirect("/")
-                            }
-                        }
-                    })
+    // for (item of body.imageDelete) {
+    //     request["$pullAll"][$]
+    // }
+    if(body.imageDelete) {
+        request.push(({}))
+        // let del = []
+        if(typeof(body.imageDelete) === "string") {
+            fs.unlinkSync("public/img/blog/multer/" + body.imageDelete, (err) => {
+                if(err) console.log(err)
+            })
+        } else {
+            for (item of body.imageDelete) {
+                fs.unlinkSync("public/img/blog/multer/" + item, (err) => {
+                    if(err) console.log(err)
                 })
-            } else res.render("blog/404.ejs", {route: req.params[0]}) // 404
-        })
+            }
+        }
+        request[1]["$pull"] = {"files": {$in: body.imageDelete}}
+    }
+
+    if(files) {
+        files = files.map(file => file.filename)
+        request[0]["$push"] = {"files": {$each: files}}
+    }
+
+    if(body.publish) {
+        request[0].published = true
+        redirect = true
+    } else if(body.unpublish) {
+        request[0].published = false
+        redirect = true
+    }
+
+    getUrl(body.title, oldUrl, (url) => {
+        request[0].url = url
+        next(redirect, request)
+    })
+}
+
+app.route("/compose").get(authStuff, (req, res) => {
+    if(req.options.admin) {
+        html = "[Compiled code will appear here.]"
+        res.render("blog/compose.ejs", {post: {}});
     } else {
         res.render("blog/404.ejs", {route: req.params[0]}) // 404
     }
+}).post(authStuff, upload.array('files'), (req, res) => {
+    // console.log(req.body, req.file, "hi");
+    if(req.options.admin) {
+        let now = Date.now();
+        generateRequest(req.body, req.files, null, (redirect, request) => {
+            request[0].date = now
+            request[0].ids = [req.user.id]
+    
+            const post = new Post(request[0])
+    
+            post.save(err => {
+                if(!err) {
+                    redirectPost(redirect, request[0].url)
+                }
+            })
+        })
+    } else res.render("blog/404.ejs", {route: req.params[0]}) // 404
 })
 
-app.route("/compose/:post").get((req, res) => {
-    if(req.isAuthenticated()) {
-        User.findOne({id: req.user.id}, (err, user) => {
-            if(user) {
-                Post.findOne({url: req.params.post}, (err, post) => {
-                    html = htmlify(post.body)
-                    if(html === "") html = "[Compiled code will appear here.]"
-                    if(!err) {
-                        res.render("blog/compose.ejs", {post: post, html: html})
-                    } else {
-                        res.render("blog/404.ejs") // 404
-                    }
-                });
-            } else res.render("blog/404.ejs", {route: req.params[0]})// 404
+app.route("/compose/:post").get(authStuff, (req, res) => {
+    if(req.options.admin) {
+        Post.findOne({url: req.params.post}, (err, post) => {
+            html = htmlify(post.body)
+            if(html === "") html = "[Compiled code will appear here.]"
+            if(!err) {
+                res.render("blog/compose.ejs", {post: post, html: html})
+            } else {
+                res.render("blog/404.ejs") // 404
+            }
+        });
+    } else res.render("blog/404.ejs", {route: req.params[0]})// 404
+}).post(authStuff, upload.array('files'), (req, res) => {
+    console.log(req.body);
+    // console.log(req.options.admin);
+    if(req.options.admin) {
+        generateRequest(req.body, req.files, req.params.post, (redirect, request) => {
+            updateAndRedirect(req.params.post, request, redirect, res)
         })
-    } else {
-        res.render("blog/404.ejs", {route: req.params[0]}) // 404
-    }
-}).post((req, res) => {
-    if(req.isAuthenticated()) {
-        User.findOne({id: req.user.id}, (err, user) => {
-            if(user) {
-                let request = {}
-                let redirect = false
-
-                if(req.body.publish) {
-                    request.published = true
-                    redirect = true
-                } else if(req.body.unpublish) {
-                    request.published = false
-                    redirect = true
-                }
-
-                if(req.body.title) {
-                    req.body.title = req.body.title.replace(/\?/g, "").replace(/\:/g, "")
-                    request.title = req.body.title
-                    request.body = req.body.message
-                    request.img = req.body.img
-
-                    getUrl(req.body.title, req.params.post, (url) => {
-                        request.url = url
-                        console.log(request)
-
-                        updateAndRedirect(req.params.post, request, redirect, res)
-                    })
-                } else {
-                    updateAndRedirect(req.params.post, request, redirect, res)
-                }
-
-            } else res.render("blog/404.ejs", {route: req.params[0]})// 404
-        })
-    } else {
-        res.render("blog/404.ejs", {route: req.params[0]}) // 404
-    }
+    } else res.render("blog/404.ejs", {route: req.params[0]})// 404
 })
 
-
+// app.post("/compose/:post/image", authStuff, upload.array('files'), (req, res) => {
+//     if(req.options.admin) {
+//         let request = {"$push" : {"files": {$each: []}}}
+//         for (item of req.files) {
+//             request["$addToSet"]["files"]["$each"].push(item.filename)
+//         }
+//         updateAndRedirect(req.params.post, request, false, res)
+//     } else res.render("blog/404.ejs", {route: req.params[0]})// 404
+// })
 
 
 
