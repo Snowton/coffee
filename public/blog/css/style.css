@@ -14,7 +14,7 @@ nav, footer, .website h1, h2, h3, h4, h5, h6 {
 }
 
 h2, h3, h4, h5, h6 {
-    color: #4e3620;
+    color: var(--body-text);
     font-weight: bold;
 }
 
@@ -121,7 +121,7 @@ nav a:hover {
 }
 
 .website a:hover, .website .homeform button:hover {
-    color: #966c3b;
+    color: var(--hf-text);
 }
 
 /* ************ UNORDERED LISTS ********* */
@@ -141,6 +141,14 @@ nav a:hover {
     border-radius: 5px;
     padding: 15px;
     margin: 20px 0;
+}
+
+.website .card a {
+    color: var(--body-text);
+}
+
+.website .card a:hover {
+    color: var(--hf-text);
 }
 
 .website .snippet {
