@@ -397,11 +397,6 @@ app.route("/compose").get(authStuff, (req, res) => {
     } else {
         res.render("blog/404.ejs", {route: req.originalUrl}) // 404
     }
-    const dir = './public/img/blog/multer';
-
-    if (!fs.existsSync(dir)){
-        fs.mkdirSync(dir);
-    }
 }).post(authStuff, upload.array('files'), (req, res) => {
     // console.log(req.body, req.file, "hi");
     if(req.options.admin) {
@@ -536,4 +531,10 @@ app.get("*", (req, res) => {
 app.listen(process.env.PORT || 3000, (err) => {
     if (!err) console.log("successfully started on port 3000 or process.env.PORT");
     else console.log(err);
+    
+    const dir = './public/img/blog/multer';
+
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+    }
 })
