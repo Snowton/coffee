@@ -397,6 +397,11 @@ app.route("/compose").get(authStuff, (req, res) => {
     } else {
         res.render("blog/404.ejs", {route: req.originalUrl}) // 404
     }
+    const dir = './public/img/blog/multer';
+
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+    }
 }).post(authStuff, upload.array('files'), (req, res) => {
     // console.log(req.body, req.file, "hi");
     if(req.options.admin) {
