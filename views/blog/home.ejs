@@ -29,10 +29,18 @@
         <% posts.forEach(post => { %>
             <div class="card">
                 <h3>
-                    <a href="/posts/<%= post.url %>" class="nowrap" <% if(post.pin > 50) { %> style="background-color: yellow;" <% } %> ><%= post.title %><% if(post.pin > 0) { %> <i class="fas fa-thumbtack"></i><% } %></a> <% if(admin && post.ids.map(user => user.id).includes(id)) { %><span class="nowrap"><span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span>
-                    <form action="/compose/<%= post.url %>" method="POST" class="homeform">
-                        <% if(post.published) { %><button name="unpublish" value="true" type="submit"><i class="fas fa-angle-left"></i></button><% } else { %><button name="publish" value="true" type="submit"><i class="fas fa-angle-right"></i></button><% } %> 
-                    </form></span>
+                    <a href="/posts/<%= post.url %>" class="nowrap" <% if(post.pin > 50) { %> style="background-color: yellow;" <% } %> ><%= post.title %><% if(post.pin > 0) { %> <i class="fas fa-thumbtack"></i><% } %></a> 
+                    <% if(admin) { %>
+                        <% if (post.ids.map(user => user.id).includes(id)) { %>
+                        <span class="nowrap">
+                        <span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span>
+                        <form action="/compose/<%= post.url %>" method="POST" class="homeform">
+                            <% if(post.published) { %><button name="unpublish" value="true" type="submit"><i class="fas fa-angle-left"></i></button><% } else { %><button name="publish" value="true" type="submit"><i class="fas fa-angle-right"></i></button><% } %> 
+                        </form>
+                        </span>
+                        <% } else { %><span class="admin-sidenote"><i class="small"><%= post.published ? "" : "unpublished" %></i></span> 
+                        <% } %>
+                        <% if(admin && post.creator.id != id) { %> <span class="admin-sidenote small"><%= post.creator.email %> </span><% } %>
                     <% } %>
                 </h3>
                 <div class="snippet"><%- post.body %> <a href="/posts/<%= post.url %>" class="nowrap"><%= post.body.length > 100 ? "Read more" : "Go to post" %> <i class="fas fa-arrow-circle-right"></i></a></div>

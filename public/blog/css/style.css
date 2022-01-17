@@ -151,6 +151,12 @@ nav a:hover {
     color: var(--hf-text);
 }
 
+.website .card .admin-sidenote {
+    font-family: 'Noto Serif', sans-serif;
+    font-weight: normal;
+}
+
+
 .website .snippet {
     margin: 20px 0;
 }

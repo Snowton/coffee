@@ -16,12 +16,14 @@
             <% for (month of year.months) { %>
                 <h3><%= month.month %></h3>
                 <ul>
-                <% for (post of month.posts) { %>
-                    <li><% if(admin && post.ids.map(user => user.id).includes(id)) { %><span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span>
+                <% for (post of month.posts) { let creator = false; %>
+                    <li><% if(admin && post.ids.map(user => user.id).includes(id)) { creator = true; %><span class="fontawesome"><a href="/compose/<%= post.url %>"><i class="fas fa-pen"></i></a></span>
                         <form action="/compose/<%= post.url %>" method="POST" class="homeform">
                             <% if(post.published) { %><button name="unpublish" value="true" type="submit"><i class="fas fa-angle-left"></i></button><% } else { %><button name="publish" value="true" type="submit"><i class="fas fa-angle-right"></i></button><% } %> 
                         </form>
                         <% } %> <a href="/posts/<%= post.url %>" <% if(post.pin > 50) { %> style="background-color: yellow;" <% } %> ><%= post.title %> <% if(post.pin > 0) { %> <i class="fas fa-thumbtack"></i><% } %></a>
+                        <i class="small"><%= (admin && ! creator && !post.published) ? "unpublished" : "" %></i>
+                        <span class="small"><%= (admin && ! creator)? post.creator.email : "" %></span>
                     </li>
                 <% } %> 
                 </ul>
