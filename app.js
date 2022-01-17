@@ -214,7 +214,7 @@ const blogFind = (request, cb) => {
                 //     years[year] = {};
                 // }
 
-                console.log(years);
+                // console.log(years);
 
                 months = years[years.length - 1].months
                 month = post.date.toLocaleString('default', { month: 'long' })
@@ -236,13 +236,11 @@ const blogFind = (request, cb) => {
 
 app.get("/", authStuff, (req, res) => {
     homeFind(req.options.admin ? {} : {published: true}, (posts) => {
-        console.log(posts);
         posts.map(post => {
             post.body = homeStr(post.body)
             post.ids.push(post.creator)
             return post
         })
-        console.log(posts);
         res.render("blog/home.ejs", {posts: posts, admin: req.options.admin, id: req.user ? req.user.id : null, name: req.options.name ? (req.user.name.givenName ? req.user.name.givenName : req.user.displayName) : false });
     })
 })
@@ -303,7 +301,6 @@ const updateAndRedirect = (url, request, redirect, res) => {
     Post.updateOne({url: url}, request[0], (err) => {
         if(!err) {
             if(request[1]) {
-                console.log(request[1]);
                 Post.updateOne({url: url}, request[1], (err, post) => {
                     if(!err) redirectPost(redirect, url, res)
                 })
@@ -369,25 +366,14 @@ const generateRequest = (body, files, user, oldUrl, next) => {
         getUrl(body.title, oldUrl, (url) => {
             request[0].url = url
             body.ids=body.ids.split(",")
-            console.log(body.ids);
             User.find({email: {$in: body.ids}}, (err, users) => {
                 if(users) {
                     request[0]["ids"]=users
                 }
                 next(redirect, request)
             })
-            // console.log(redirect)
         })
     } else next(redirect, request)
-
-    // for (item of files) {
-    //     request["$push"]["files"]["$each"].push(item.filename)
-    // }
-    // console.log(files)
-
-    // for (item of body.imageDelete) {
-    //     request["$pullAll"][$]
-    // }
 }
 
 app.route("/compose").get(authStuff, (req, res) => {
@@ -398,7 +384,6 @@ app.route("/compose").get(authStuff, (req, res) => {
         res.render("blog/404.ejs", {route: req.originalUrl}) // 404
     }
 }).post(authStuff, upload.array('files'), (req, res) => {
-    // console.log(req.body, req.file, "hi");
     if(req.options.admin) {
         let now = Date.now();
         generateRequest(req.body, req.files, req.user, null, (redirect, request) => {
@@ -406,7 +391,6 @@ app.route("/compose").get(authStuff, (req, res) => {
             request[0].creator = {_id: req.user._id, id: req.user.id, email: req.user.emails[0].value}
     
             const post = new Post(request[0])
-            // console.log(redirect)
     
             post.save(err => {
                 if(!err) {
@@ -429,12 +413,10 @@ app.route("/compose/:post").get(authStuff, (req, res) => {
                     res.render("blog/404.ejs") // 404
                 }
             } else res.render("blog/404.ejs", {route: req.originalUrl})// 404
-            console.log(req.params, req);
         });
     } else res.render("blog/404.ejs", {route: req.originalUrl})// 404
 }).post(authStuff, upload.array('files'), (req, res) => {
-    console.log(req.body);
-    // console.log(req.options.admin);
+    // console.log(req.body);
     if(req.options.admin) {
         Post.findOne({url: req.params.post}, (err, post) => {
             if(post && post.ids.concat(post.creator).map(user => user.id).includes(req.user.id)) {
@@ -503,7 +485,6 @@ app.get(cjlhroot + "agenda", (req, res) => {
 })
 
 app.get(cjlhroot + "agendas/:meet", (req, res) => {
-    console.log('hii')
     res.render("cjlh/agendas/" + req.params.meet + ".ejs", {url: root + req.headers.host + cjlhroot}, (err, result) => {
         if(err) {
             res.render("cjlh/404.ejs")
@@ -531,7 +512,7 @@ app.get("*", (req, res) => {
 app.listen(process.env.PORT || 3000, (err) => {
     if (!err) console.log("successfully started on port 3000 or process.env.PORT");
     else console.log(err);
-    
+
     const dir = './public/img/blog/multer';
 
     if (!fs.existsSync(dir)){
