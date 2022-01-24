@@ -63,10 +63,11 @@ const User = mongoose.model("user", userSchema);
 
 const app = express()
 
+const multerDest = '/tmp/uploads/';
 // const upload = multer({ dest: 'public/img/blog/multer' })
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, '/tmp/uploads/')
+      cb(null, multerDest)
     },
     filename: function (req, file, cb) {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
@@ -348,12 +349,12 @@ const generateRequest = (body, files, user, oldUrlBase, next) => {
             request.push(({}))
             request[1]["$pull"] = {"files": {name: {$in: body.imageDelete}}}
         }
-        // const path = "/tmp/uploads/" + req.file.filename;
+        // const path = multerDest + req.file.filename;
         if(files) {
             files = files.map(file => {
                 return ({
                     contentType: file.mimetype,
-                    data: fs.readFileSync("/tmp/uploads/" + file.filename),
+                    data: fs.readFileSync(multerDest + file.filename),
                     name: file.filename
                 })
             })
@@ -524,9 +525,9 @@ app.listen(process.env.PORT || 3000, (err) => {
     if (!err) console.log("successfully started on port 3000 or process.env.PORT");
     else console.log(err);
 
-    // const dir = '/tmp/uploads/';
+    const dir = multerDest;
 
-    // if (!fs.existsSync(dir)){
-    //     fs.mkdirSync(dir);
-    // }
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+    }
 })
