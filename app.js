@@ -251,6 +251,7 @@ app.get("/", authStuff, (req, res) => {
 })
 
 app.get("/posts/:post", authStuff, (req, res) => {
+    console.log(req.params.post);
     Post.findOne({url: req.params.post}, (err, post) => {
         if(err || !post) res.render("blog/404.ejs", {route: req.originalUrl}) // 404
         else {
