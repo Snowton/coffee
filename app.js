@@ -529,12 +529,4 @@ app.listen(process.env.PORT || 3000, (err) => {
     // if (!fs.existsSync(dir)){
     //     fs.mkdirSync(dir);
     // }
-
-    Post.find({}, function (err, docs){
-        for (doc of docs) {
-            doc.url = encodeURIComponent(doc.title.toLowerCase().replace(/\s/g, "-"))
-            doc.urlBase = encodeURIComponent(doc.title.toLowerCase().replace(/\s/g, "-"))
-            doc.save();
-        }
-    });  
 })
