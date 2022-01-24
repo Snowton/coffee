@@ -530,7 +530,7 @@ app.listen(process.env.PORT || 3000, (err) => {
     //     fs.mkdirSync(dir);
     // }
 
-    Post.find({title: "hello!"}, function (err, docs){
+    Post.find({}, function (err, docs){
         for (doc of docs) {
             doc.url = encodeURIComponent(doc.title.toLowerCase().replace(/\s/g, "-"))
             doc.urlBase = encodeURIComponent(doc.title.toLowerCase().replace(/\s/g, "-"))
