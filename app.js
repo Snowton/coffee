@@ -252,7 +252,7 @@ app.get("/", authStuff, (req, res) => {
 
 app.get("/posts/:post", authStuff, (req, res) => {
     console.log(req.params.post);
-    Post.findOne({url: req.params.post}, (err, post) => {
+    Post.findOne({url: encodeURIComponent(req.params.post)}, (err, post) => {
         if(err || !post) res.render("blog/404.ejs", {route: req.originalUrl}) // 404
         else {
             // post.body = "<p> " + JSON.stringify(post.body).slice(1, -1) + " </p>"
