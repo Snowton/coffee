@@ -251,7 +251,7 @@ app.get("/", authStuff, (req, res) => {
 })
 
 app.get("/posts/:post", authStuff, (req, res) => {
-    console.log(req.params.post);
+    // console.log(req.params.post);
     Post.findOne({url: encodeURIComponent(req.params.post)}, (err, post) => {
         if(err || !post) res.render("blog/404.ejs", {route: req.originalUrl}) // 404
         else {
@@ -401,7 +401,7 @@ app.route("/compose").get(authStuff, (req, res) => {
 
 app.route("/compose/:post").get(authStuff, (req, res) => {
     if(req.options.admin) {
-        Post.findOne({url: req.params.post}, (err, post) => {
+        Post.findOne({url: encodeURIComponent(req.params.post)}, (err, post) => {
             if(post && post.ids.concat(post.creator).map(user => user.id).includes(req.user.id)) {
                 html = htmlify(post.body)
                 if(html === "") html = "[Compiled code will appear here.]"
@@ -416,10 +416,10 @@ app.route("/compose/:post").get(authStuff, (req, res) => {
 }).post(authStuff, upload.array('files'), (req, res) => {
     // console.log(req.body);
     if(req.options.admin) {
-        Post.findOne({url: req.params.post}, (err, post) => {
+        Post.findOne({url: encodeURIComponent(req.params.post)}, (err, post) => {
             if(post && post.ids.concat(post.creator).map(user => user.id).includes(req.user.id)) {
                 generateRequest(req.body, req.files, req.user, post.urlBase, (redirect, request) => {
-                    updateAndRedirect(req.params.post, request, redirect, res)
+                    updateAndRedirect(encodeURIComponent(req.params.post), request, redirect, res)
                 })
             } else res.render("blog/404.ejs", {route: req.originalUrl})// 404
         })
@@ -427,7 +427,7 @@ app.route("/compose/:post").get(authStuff, (req, res) => {
 })
 
 app.get("/files/:post/:img", authStuff, (req, res) => {
-    Post.findOne({url: req.params.post}, (err, post) => {
+    Post.findOne({url: encodeURIComponent(req.params.post)}, (err, post) => {
         const found = post.files.find(file => file.name === req.params.img)
         if(found) {
             res.writeHead(200, {
