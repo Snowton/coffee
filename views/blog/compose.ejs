@@ -29,8 +29,8 @@
                             <!-- <select name="uploads" size="4" multiple> -->
                             <% if(post.files) { for (item of post.files) { %>
                             <div>
-                                <label for="<%= item %>"><%= '/img/blog/multer/' + item %></label>
-                                <input type="checkbox" name="imageDelete" value="<%= item %>">
+                                <label for="<%= item %>"><%= '/files/' + post.url + "/" + item.name %></label>
+                                <input type="checkbox" name="imageDelete" value="<%= item.name %>">
                             </div>
                             <% }} %>
                             <!-- </select> -->

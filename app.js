@@ -20,7 +20,7 @@ const e = require("express");
 // files
 const multer = require('multer');
 const fs = require("fs");
-const { redirect } = require("express/lib/response");
+// const { redirect } = require("express/lib/response");
 
 
 
@@ -39,11 +39,16 @@ const postSchema = new mongoose.Schema({
     title: String,
     body: String,
     url: String,
+    urlBase: String,
     date: Date,
     published: Boolean,
     img: String,
     ids: [userSchema],
-    files: [String],
+    files: [{
+        data: Buffer,
+        contentType: String,
+        name: String
+    }],
     pin: Number,
     creator: userSchema
 });
@@ -61,7 +66,7 @@ const app = express()
 // const upload = multer({ dest: 'public/img/blog/multer' })
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'public/img/blog/multer')
+      cb(null, '/tmp/uploads/')
     },
     filename: function (req, file, cb) {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
@@ -271,30 +276,27 @@ app.get("/blog", authStuff, (req, res) => {
 // ********************* MY SIDE
 
 // DO NOT input titles that are a previous title + "-[integer number]"
-const getUrl = (title, change=false, cb) => {
-    let url = title.toLowerCase().replace(/\s/g, "-")
-    let newUrl = url;
-    Post.find({title: title}, {url: 1}, {sort: {url: 1}}, (err, posts) => {
-        if(posts) {
-            let count = 0;
-
-            newUrl = url + (posts.length > 0 ? "-" + (posts.length + 1) : "")
-
-            for(post of posts) {
-                // console.log(url + (count > 0 ? "-" + count : ""), post.url)
-                if(post.url === change) {
-                    newUrl = change;
-
+const getUrl = (title, oldUrlBase, cb) => {
+    let newUrl = encodeURIComponent(title.toLowerCase().replace(/\s/g, "-"))
+    const newUrlBase = newUrl
+    if(newUrl != oldUrlBase) {
+        Post.find({urlBase: newUrl}, {url: 1}, {sort: {url: 1}}, (err, posts) => {
+            if(posts) {
+                let count = 0;
+                newUrl = newUrl + (posts.length > 0 ? "-" + (posts.length + 1) : "")
+    
+                for(post of posts) {
+                    const possible = url + (count > 0 ? "-" + count : "")
+                    if(possible != post.url) {
+                        newUrl = possible;
+                        break;
+                    }
+                    count++;
                 }
-                if((url + (count > 0 ? "-" + count : "")) != post.url) {
-                    newUrl = url + (count > 0 ? "-" + count : "");
-                    break;
-                }
-                count++;
             }
-        }
-        cb(newUrl);
-    })
+            cb(newUrl, newUrlBase);
+        })
+    } else cb(newUrl, newUrlBase);
 }
 
 const updateAndRedirect = (url, request, redirect, res) => {
@@ -319,7 +321,7 @@ const redirectPost = (redirect, url, res) => {
     }
 }
 
-const generateRequest = (body, files, user, oldUrl, next) => {
+const generateRequest = (body, files, user, oldUrlBase, next) => {
     let request = [{}]
     let redirect = false
 
@@ -334,7 +336,7 @@ const generateRequest = (body, files, user, oldUrl, next) => {
     // no title in posts page or home page !!
     if(body.title) {
         request = [{
-            title: body.title.replace(/\?/g, "").replace(/\:/g, ""),
+            title: body.title,
             body: body.message,
             img: body.img,
             pin: Math.max(0, body.pin),
@@ -343,33 +345,28 @@ const generateRequest = (body, files, user, oldUrl, next) => {
 
         if(body.imageDelete) {
             request.push(({}))
-            // let del = []
-            if(typeof(body.imageDelete) === "string") {
-                fs.unlinkSync("public/img/blog/multer/" + body.imageDelete, (err) => {
-                    if(err) console.log(err)
-                })
-            } else {
-                for (item of body.imageDelete) {
-                    fs.unlinkSync("public/img/blog/multer/" + item, (err) => {
-                        if(err) console.log(err)
-                    })
-                }
-            }
-            request[1]["$pull"] = {"files": {$in: body.imageDelete}}
+            request[1]["$pull"] = {"files": {name: {$in: body.imageDelete}}}
         }
-    
+        // const path = "/tmp/uploads/" + req.file.filename;
         if(files) {
-            files = files.map(file => file.filename)
+            files = files.map(file => {
+                return ({
+                    contentType: file.mimetype,
+                    data: fs.readFileSync("/tmp/uploads/" + file.filename),
+                    name: file.filename
+                })
+            })
             request[0]["$push"] = {"files": {$each: files}}
         }
 
-        getUrl(body.title, oldUrl, (url) => {
-            request[0].url = url
-            body.ids=body.ids.split(",")
-            User.find({email: {$in: body.ids}}, (err, users) => {
-                if(users) {
-                    request[0]["ids"]=users
-                }
+        body.ids=body.ids.split(",")
+        User.find({email: {$in: body.ids}}, (err, users) => {
+            if(users) {
+                request[0]["ids"]=users
+            }
+            getUrl(body.title, oldUrlBase, (url, urlBase) => {
+                request[0].url = url
+                request[0].urlBase = urlBase
                 next(redirect, request)
             })
         })
@@ -420,12 +417,25 @@ app.route("/compose/:post").get(authStuff, (req, res) => {
     if(req.options.admin) {
         Post.findOne({url: req.params.post}, (err, post) => {
             if(post && post.ids.concat(post.creator).map(user => user.id).includes(req.user.id)) {
-                generateRequest(req.body, req.files, req.user, req.params.post, (redirect, request) => {
+                generateRequest(req.body, req.files, req.user, post.urlBase, (redirect, request) => {
                     updateAndRedirect(req.params.post, request, redirect, res)
                 })
             } else res.render("blog/404.ejs", {route: req.originalUrl})// 404
         })
     } else res.render("blog/404.ejs", {route: req.originalUrl})// 404
+})
+
+app.get("/files/:post/:img", authStuff, (req, res) => {
+    Post.findOne({url: req.params.post}, (err, post) => {
+        const found = post.files.find(file => file.name === req.params.img)
+        if(found) {
+            res.writeHead(200, {
+                'Content-Length': found.data.length,
+                'Content-Type': found.contentType
+            });
+            res.end(found.data)
+        } else res.render("blog/404.ejs", {route: req.originalUrl})
+    })
 })
 
 // app.post("/compose/:post/image", authStuff, upload.array('files'), (req, res) => {
@@ -513,9 +523,9 @@ app.listen(process.env.PORT || 3000, (err) => {
     if (!err) console.log("successfully started on port 3000 or process.env.PORT");
     else console.log(err);
 
-    const dir = './public/img/blog/multer';
+    // const dir = '/tmp/uploads/';
 
-    if (!fs.existsSync(dir)){
-        fs.mkdirSync(dir);
-    }
+    // if (!fs.existsSync(dir)){
+    //     fs.mkdirSync(dir);
+    // }
 })
