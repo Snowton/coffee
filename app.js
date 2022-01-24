@@ -358,6 +358,7 @@ const generateRequest = (body, files, user, oldUrlBase, next) => {
                     name: file.filename
                 })
             })
+            files = files.filter(file => file.data.length < 17825792)
             request[0]["$push"] = {"files": {$each: files}}
         }
 
